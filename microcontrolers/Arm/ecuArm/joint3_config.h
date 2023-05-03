@@ -21,6 +21,7 @@ Arm movement preferable be within the HW limits*/
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_3                5
 #define NEGATIVE_DIR_PIN_3                5
+#define PWM_PIN_3                           0
 #define LIMIT_SWITCH_H_PIN_3              9
 #define LIMIT_SWITCH_L_PIN_3              9
 

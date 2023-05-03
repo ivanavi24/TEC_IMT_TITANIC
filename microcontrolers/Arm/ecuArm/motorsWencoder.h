@@ -6,6 +6,7 @@ class DCmotor_Encoder{
     int joint_current;
     unsigned char positive_dir_pin;
     unsigned char negative_dir_pin;
+    unsigned char pwm_pin;
     
     unsigned int min_actuator_signal;
     unsigned int max_actuator_signal;
@@ -23,7 +24,7 @@ class DCmotor_Encoder{
 
     
   public:
-    DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV,float joint_low_limit_hwV,
+    DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV,unsigned char pwm_pinV,float joint_low_limit_hwV,
                    float  joint_high_limit_hwV, float joint_low_limit_swV, float joint_high_limit_swV);
     void move2position(float deltaTime);
     void moveMotor(int duty_cycle);

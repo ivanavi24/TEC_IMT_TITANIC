@@ -1,4 +1,4 @@
-
+cmd 
 #include "Wire.h"
 #include "i2cComm.h"
 

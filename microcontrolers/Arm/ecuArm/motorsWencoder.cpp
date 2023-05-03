@@ -1,13 +1,14 @@
 #include "motorsWencoder.h"
 #include "Arduino.h"
 
-DCmotor_Encoder::DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV,float joint_low_limit_hwV,
+DCmotor_Encoder::DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV, unsigned char pwm_pinV,float joint_low_limit_hwV,
                    float  joint_high_limit_hwV, float joint_low_limit_swV, float joint_high_limit_swV){
       kp=kpV;
       kd=kdV;
       ki=kiV;
       positive_dir_pin=positive_dir_pinV;
       negative_dir_pin=negative_dir_pinV;
+      pwm_pin = pwm_pinV;
       joint_low_limit_hw = joint_low_limit_hwV;
       joint_high_limit_hw =joint_high_limit_hwV;
       joint_low_limit_sw = joint_low_limit_swV;
@@ -25,7 +26,7 @@ void DCmotor_Encoder::move2position(float deltaTime){
       moveMotor(satureControl(joint_control));
     }
 void DCmotor_Encoder::moveMotor(int duty_cycle){
-      ledcWrite(0, duty_cycle);
+      ledcWrite(pwm_pin, duty_cycle);
     }
 void DCmotor_Encoder:: moveDirection(){
       if ( (joint_desired - joint_current) > 0){

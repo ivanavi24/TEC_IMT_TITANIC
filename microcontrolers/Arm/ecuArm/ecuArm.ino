@@ -7,7 +7,7 @@ uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
 
-Crane3dof titanicCrane;
+Crane3dof titanicCrane();
 void setup() {
   Serial.begin(115200);
   i2c_setSlave();

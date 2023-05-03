@@ -1,6 +1,8 @@
 #include "i2cComm.h"
 #include "Arduino.h"
+#include "Crane3dof.h"
 
+extern Crane3dof titanicCrane;
 void i2c_onRequest(){
   
   /*Wire.print(i++);
