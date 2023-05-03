@@ -1,9 +1,6 @@
+#include "motorsWencoder.h"
 #ifndef CRANE3DOF_H
 #define CRANE3DOF_H
-
-#include "motorsWencoder.h"
-
-
 class Crane3dof{
   private:
 
@@ -30,6 +27,8 @@ class Crane3dof{
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
   void setTargetJoints();
   void reachPosition(float deltaTime);
+  void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
+
 };
 
 

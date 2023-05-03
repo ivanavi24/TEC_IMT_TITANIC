@@ -2,15 +2,17 @@
 #include "Crane3dof.h"
 
 
-#define PID_INTERVAL 5
+#define PID_INTERVAL 15000
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
 
-Crane3dof titanicCrane();
+Crane3dof titanicCrane;
 void setup() {
   Serial.begin(115200);
   i2c_setSlave();
+
+
 }
 /*Main Loop*/
 void loop() {
@@ -19,6 +21,7 @@ void loop() {
     /*Control action*/  
     //titanicCrane.reachPosition(time_now-time_last);
     time_last=millis();
+
   }
 
 }

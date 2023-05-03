@@ -4,6 +4,7 @@
 #include "joint3_config.h"
 #include "Crane3dof.h"
 #include "math.h"
+#include "Arduino.h"
 #define PI                          3.14159265
 
 Crane3dof::Crane3dof ():first_motor(KP_1,KI_1,KD_1,POSITIVE_DIR_PIN_1,NEGATIVE_DIR_PIN_1,PWM_PIN_1,JOINT1_LOW_LIMIT_HW,JOINT1_HIGH_LIMIT_HW,JOINT1_LOW_LIMIT_SW,JOINT1_HIGH_LIMIT_SW),
@@ -43,5 +44,15 @@ void Crane3dof::setTargetJoints(){
   second_motor.setJointDesired(pulsesJoint2);
   third_motor.setJointDesired(pulsesJoint3);
 }
-    
+void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution){
+  int dCycle = (pwm[0]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
+  Serial.printf("Pwm motor 1 es: %d \n",dCycle);
+  //first_motor.moveMotor(dCycle);
+  dCycle = (pwm[1]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
+  Serial.printf("Pwm motor 2 es: %d \n",dCycle);
+  //second_motor.moveMotor(dCycle);
+  dCycle = (pwm[2]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
+  Serial.printf("Pwm motor 2 es: %d \n",dCycle);
+  //third_motor.moveMotor(dCycle);
+}
 

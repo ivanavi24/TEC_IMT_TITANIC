@@ -1,8 +1,10 @@
+#include "Wire.h"
+#include "i2c_config.h"
 #include "i2cComm.h"
 #include "Arduino.h"
-#include "Crane3dof.h"
 
-extern Crane3dof titanicCrane;
+
+
 void i2c_onRequest(){
   
   /*Wire.print(i++);
@@ -27,6 +29,8 @@ void i2c_onReceive(int len){
       float yref=(float(readUint16data()))/(pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
       float zref=(float(readUint16data()))/ (pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
       Serial.print(" X:  ");Serial.printf("%f",xref);Serial.print("  Y: ");Serial.printf("%f",yref);Serial.print(" Z: ");Serial.printf("%f\n",zref);
+      float pwmArr[3]={xref,yref,zref};
+      titanicCrane.moveMotors(pwmArr, MIN_VALUE_CMD_1,MAX_VALUE_CMD_1, 16);
       tempByte = Wire.read();
       if(tempByte == END_COMMAND){
         Serial.println("Communication success");
