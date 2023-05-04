@@ -6,6 +6,7 @@
 //Dirección esclavo ESP32
 #define I2C_DEV_ADDR                        0x55
 
+//Longitud de mensaje a recibir
 #define ARM_COMMAND_LENGTH                  0x08
 
 #define ARM_WITH GRIPPER_COMMAND_LENGHT     0x6
