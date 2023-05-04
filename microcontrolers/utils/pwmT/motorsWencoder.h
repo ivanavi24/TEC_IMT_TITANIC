@@ -7,6 +7,7 @@ class DCmotor_Encoder{
     unsigned char positive_dir_pin;
     unsigned char negative_dir_pin;
     unsigned char pwm_pin;
+    unsigned char pwm_channel;
     
     unsigned int min_actuator_signal;
     unsigned int max_actuator_signal;

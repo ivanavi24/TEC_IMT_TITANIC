@@ -21,14 +21,14 @@ Arm movement preferable be within the HW limits*/
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_1              5
 #define NEGATIVE_DIR_PIN_1              5
-#define PWM_PIN_1                           0
+#define PWM_PIN_1                         15
 #define LIMIT_SWITCH_H_PIN_1              9
 #define LIMIT_SWITCH_L_PIN_1              9
 
 /*PWM configuration*/
 #define PWM_CHANNEL_1                       0
-#define PWM_FREQUENCY_1                   5000
-#define PWM_RESOLUTION_1                    16
+#define PWM_FREQUENCY_1                   1000
+#define PWM_RESOLUTION_1                    8
 
 
 #define ZERO_POS_1                      1.57

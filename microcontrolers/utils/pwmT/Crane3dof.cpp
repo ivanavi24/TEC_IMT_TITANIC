@@ -44,7 +44,7 @@ void Crane3dof::setTargetJoints(){
   second_motor.setJointDesired(pulsesJoint2);
   third_motor.setJointDesired(pulsesJoint3);
 }
-void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution){
+void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, __uint8_t pwm_resolution){
   int dCycle = (pwm[0]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
   Serial.printf("Pwm motor 1 es: %d \n",dCycle);
   first_motor.moveMotor(dCycle);
@@ -52,7 +52,7 @@ void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_r
   Serial.printf("Pwm motor 2 es: %d \n",dCycle);
   second_motor.moveMotor(dCycle);
   dCycle = (pwm[2]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
-  Serial.printf("Pwm motor 2 es: %d \n",dCycle);
+  Serial.printf("Pwm motor 3 es: %d \n",dCycle);
   third_motor.moveMotor(dCycle);
 }
 
