@@ -3,6 +3,7 @@
 #define START_COMMAND                       0x55 /* binary ->  0101 0101*/
 #define END_COMMAND                         0xAA /* binary ->  1010 1010*/
 
+//Dirección esclavo ESP32
 #define I2C_DEV_ADDR                        0x55
 
 #define ARM_COMMAND_LENGTH                  0x08
