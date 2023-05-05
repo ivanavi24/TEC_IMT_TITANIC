@@ -2,7 +2,7 @@
 #include "Crane3dof.h"
 
 
-#define PID_INTERVAL 15000
+#define PID_INTERVAL 5000
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();

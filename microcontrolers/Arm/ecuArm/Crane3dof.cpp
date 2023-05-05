@@ -7,9 +7,68 @@
 #include "Arduino.h"
 #define PI                          3.14159265
 
-Crane3dof::Crane3dof ():first_motor(KP_1,KI_1,KD_1,POSITIVE_DIR_PIN_1,NEGATIVE_DIR_PIN_1,PWM_PIN_1,JOINT1_LOW_LIMIT_HW,JOINT1_HIGH_LIMIT_HW,JOINT1_LOW_LIMIT_SW,JOINT1_HIGH_LIMIT_SW,PWM_CHANNEL_1,PWM_FREQUENCY_1,PWM_RESOLUTION_1),
-second_motor(KP_2,KI_2,KD_2,POSITIVE_DIR_PIN_2,NEGATIVE_DIR_PIN_2,PWM_PIN_2,JOINT2_LOW_LIMIT_HW,JOINT2_HIGH_LIMIT_HW,JOINT2_LOW_LIMIT_SW,JOINT2_HIGH_LIMIT_SW,PWM_CHANNEL_2,PWM_FREQUENCY_2,PWM_RESOLUTION_2),
-third_motor(KP_3,KI_3,KD_3,POSITIVE_DIR_PIN_3,NEGATIVE_DIR_PIN_3,PWM_PIN_3,JOINT3_LOW_LIMIT_HW,JOINT3_HIGH_LIMIT_HW,JOINT3_LOW_LIMIT_SW,JOINT3_HIGH_LIMIT_SW,PWM_CHANNEL_3,PWM_FREQUENCY_3,PWM_RESOLUTION_3){
+struct MotorEncoderParams joint1 = 
+{
+    ENCODER_A_1,
+    ENCODER_B_1,
+    POSITIVE_DIR_PIN_1,
+    NEGATIVE_DIR_PIN_1,
+    PWM_PIN_1,
+    MIN_PWM_SIGNAL,
+    MAX_PWM_SIGNAL,
+    KP_1,
+    KD_1,
+    KI_1,
+    JOINT1_LOW_LIMIT_HW,        
+    JOINT1_HIGH_LIMIT_HW, 
+    JOINT1_LOW_LIMIT_SW,                  
+    JOINT1_HIGH_LIMIT_SW  
+};
+
+struct MotorEncoderParams joint2 = 
+{
+    ENCODER_A_2,
+    ENCODER_B_2,
+    POSITIVE_DIR_PIN_2,
+    NEGATIVE_DIR_PIN_2,
+    PWM_PIN_2,
+    MIN_PWM_SIGNAL,
+    MAX_PWM_SIGNAL,
+    KP_2,
+    KD_2,
+    KI_2,
+    JOINT2_LOW_LIMIT_HW,        
+    JOINT2_HIGH_LIMIT_HW, 
+    JOINT2_LOW_LIMIT_SW,                  
+    JOINT2_HIGH_LIMIT_SW  
+};
+
+struct MotorEncoderParams joint3 = 
+{
+    ENCODER_A_3,
+    ENCODER_B_3,
+    POSITIVE_DIR_PIN_3,
+    NEGATIVE_DIR_PIN_3,
+    PWM_PIN_3,
+    MIN_PWM_SIGNAL,
+    MAX_PWM_SIGNAL,
+    KP_3,
+    KD_3,
+    KI_3,
+    JOINT3_LOW_LIMIT_HW,        
+    JOINT3_HIGH_LIMIT_HW, 
+    JOINT3_LOW_LIMIT_SW,                  
+    JOINT3_HIGH_LIMIT_SW  
+};
+
+
+
+
+Crane3dof::Crane3dof ():first_motor(joint1),
+second_motor(joint2),
+third_motor(joint3){
+  Serial.begin(115200);
+  Serial.println("here");
   origin2water=0;
   joint1_encoder_resolution = JOINT1_ENCODER_RESOLUTION;
   joint2_encoder_resolution = JOINT2_ENCODER_RESOLUTION;
@@ -53,6 +112,11 @@ void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_r
   second_motor.moveMotor(dCycle);
   dCycle = (pwm[2]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
   Serial.printf("Pwm motor 2 es: %d \n",dCycle);
-  third_motor.moveMotor(dCycle);
+  third_motor.moveMotor(dCycle); 
+}
+void Crane3dof::printMotorGains(){
+  first_motor.displayGainValues();
+  second_motor.displayGainValues();
+  third_motor.displayGainValues();
 }
 

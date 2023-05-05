@@ -27,7 +27,7 @@ class Crane3dof{
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
   void setTargetJoints();
   void reachPosition(float deltaTime);
-  void moveMotors(float pwm[], float minValue,float maxValue, __uint8_t pwm_resolution);
+  void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
 
 };
 

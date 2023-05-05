@@ -1,12 +1,39 @@
+#include "joints_config.h"
+
 #ifndef MOTORSWENCODER_H
 #define MOTORSWENCODER_H
+struct MotorEncoderParams{
+
+    /*Encoder*/
+    PIN encoderA;
+    PIN encoderB;
+
+    /*PWM*/
+    PIN positive_dir_pin;
+    PIN negative_dir_pin;
+    PIN pwm_pin;
+    
+    /*Values for communication unwrappping*/
+    unsigned int min_actuator_pwm_signal;
+    unsigned int max_actuator_pwm_signal;
+    
+    float kp;
+    float kd;
+    float ki;
+
+    /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
+    float joint_low_limit_hw;
+    float joint_high_limit_hw;
+    
+    /*SW limits to restric movement within specified range*/
+    float joint_low_limit_sw;
+    float joint_high_limit_sw;
+};
 class DCmotor_Encoder{
   private: 
     int joint_desired;
     int joint_current;
-    unsigned char positive_dir_pin;
-    unsigned char negative_dir_pin;
-    unsigned char pwm_pin;
+    
     
     unsigned int min_actuator_signal;
     unsigned int max_actuator_signal;
@@ -22,10 +49,15 @@ class DCmotor_Encoder{
     float joint_low_limit_sw;
     float joint_high_limit_sw;
 
+    PIN encoderA;
+    PIN encoderB;
+    PIN positive_dir_pin;
+    PIN negative_dir_pin;
+    PIN pwm_pin;
+
     
   public:
-    DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV,unsigned char pwm_pinV,float joint_low_limit_hwV,
-                   float  joint_high_limit_hwV, float joint_low_limit_swV, float joint_high_limit_swV,unsigned char channel, unsigned int freq, unsigned char resolution);
+    DCmotor_Encoder(MotorEncoderParams motorParams);
     void move2position(float deltaTime);
     void moveMotor(int duty_cycle);
     void moveDirection();
@@ -35,7 +67,9 @@ class DCmotor_Encoder{
     void stopMovement();
     unsigned int satureControl(float control_action);
     void setJointDesired( int desired_pulses);
+    void updateCurrentJoint();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
+    void displayGainValues();
 };
 
 #endif

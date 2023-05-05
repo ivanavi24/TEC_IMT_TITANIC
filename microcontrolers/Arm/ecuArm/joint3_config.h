@@ -1,3 +1,6 @@
+
+
+
 #define JOINT3_ZERO_POSITION            60.5
 
 /*Encoder resoluition in pulses per meter [pulses/m]*/
@@ -13,15 +16,19 @@ Arm movement preferable be within the HW limits*/
 #define JOINT3_LOW_LIMIT_SW                0   
 #define JOINT3_HIGH_LIMIT_SW               90  
 
+#define MIN_PWM_SIGNAL              0
+#define MAX_PWM_SIGNAL              0
 /*PID Control gains*/
-#define KP_3                            1
-#define KI_3                            1
-#define KD_3                            1
+#define KP_3                            2
+#define KI_3                            7
+#define KD_3                            4
 
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_3                5
 #define NEGATIVE_DIR_PIN_3                5
-#define PWM_PIN_3                           0
+#define PWM_PIN_3           0
+#define ENCODER_A_3                     0
+#define ENCODER_B_3                     0
 #define LIMIT_SWITCH_H_PIN_3              9
 #define LIMIT_SWITCH_L_PIN_3              9
 
@@ -32,3 +39,5 @@ Arm movement preferable be within the HW limits*/
 
 
 #define ZERO_POS_3                      1.57
+
+

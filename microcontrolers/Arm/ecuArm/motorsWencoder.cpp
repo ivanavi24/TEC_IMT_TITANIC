@@ -1,22 +1,38 @@
 #include "motorsWencoder.h"
 #include "Arduino.h"
 
-DCmotor_Encoder::DCmotor_Encoder(float kpV, float kiV, float kdV, unsigned char positive_dir_pinV,unsigned char negative_dir_pinV, unsigned char pwm_pinV,float joint_low_limit_hwV,
-                   float  joint_high_limit_hwV, float joint_low_limit_swV, float joint_high_limit_swV,unsigned char channel, unsigned int freq, unsigned char resolution){
-      kp=kpV;
-      kd=kdV;
-      ki=kiV;
-      positive_dir_pin=positive_dir_pinV;
-      negative_dir_pin=negative_dir_pinV;
-      pwm_pin = pwm_pinV;
-      joint_low_limit_hw = joint_low_limit_hwV;
-      joint_high_limit_hw =joint_high_limit_hwV;
-      joint_low_limit_sw = joint_low_limit_swV;
-      joint_high_limit_sw = joint_high_limit_swV;
+DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
+      
+
+      joint_current=ZERO_VAL_INITIALIZER;
+      joint_desired=ZERO_VAL_INITIALIZER;
+      joint_error_i=ZERO_VAL_INITIALIZER;
+      min_actuator_signal = motorParams.max_actuator_pwm_signal;
+      max_actuator_signal = motorParams.min_actuator_pwm_signal;
+      kp = motorParams.kp;
+      kd = motorParams.kd;
+      ki = motorParams.ki;
+      Serial.printf("El valor de las ganancias kp: %f  kd %f  ki %f'\n",kp,kd,ki);
+      positive_dir_pin=motorParams.positive_dir_pin;
+      negative_dir_pin=motorParams.negative_dir_pin;
+      
+      joint_low_limit_hw = motorParams.joint_low_limit_hw;
+      joint_high_limit_hw =motorParams.joint_high_limit_hw;
+      joint_low_limit_sw = motorParams.joint_low_limit_sw;
+      joint_high_limit_sw = motorParams.joint_high_limit_sw;
+      
+      encoderA = motorParams.encoderA;
+      encoderB = motorParams.encoderB;
+      positive_dir_pin = motorParams.positive_dir_pin;
+      negative_dir_pin = motorParams.negative_dir_pin;
+      pwm_pin = motorParams.pwm_pin;
+      
+      
       min_actuator_signal=0;
       max_actuator_signal=0;
       joint_error_i=0;
-      initializePWM( channel, freq, resolution);
+
+      //initializePWM( channel, freq, resolution);
 }
 void DCmotor_Encoder::move2position(float deltaTime){
       float joint_error = joint_desired - joint_current;
@@ -65,7 +81,15 @@ unsigned int DCmotor_Encoder::satureControl(float control_action){
 void DCmotor_Encoder::setJointDesired( int desired_pulses){
       joint_desired  = desired_pulses;
     }
+void DCmotor_Encoder::updateCurrentJoint(){
+  
+}
 void DCmotor_Encoder:: initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution){
   ledcSetup(ledchannel, freq, resolution);
   ledcAttachPin(pwm_pin, ledchannel);
 }
+
+void DCmotor_Encoder::displayGainValues(){
+  Serial.printf("Kp: %f Kd: %f Ki: %f  \n",kp,kd,ki);
+}
+

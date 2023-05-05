@@ -1,27 +1,33 @@
+
+
 #define JOINT1_ZERO_POSITION            60.5
 
-/*Encoder resoluition in pulses per revolution [pulses/revolution]*/
+/*Encoder resoluition in pulses per meter [pulses/m]*/
 #define JOINT1_ENCODER_RESOLUTION       50
 
 /*Joint movement limit in terms of pulses 
 (Low limit is 0, since start rutine sets zero with limite switch)
 Arm movement preferable be within the HW limits*/ 
 #define JOINT1_LOW_LIMIT_HW                0   
-#define JOINT1_HIGH_LIMIT_HW               90  /*First Joint movement limit in terms of pulses*/
+#define JOINT1_HIGH_LIMIT_HW               90  
 
 /**SW limits to restrict movement wtithin a given range*/
-#define JOINT1_LOW_LIMIT_SW                 0   /*First Joint movement limit in terms of pulses (Low limit is 0, since start rutine sets zero with limite switch)*/ 
-#define JOINT1_HIGH_LIMIT_SW               90  /*First Joint movement limit in terms of pulses*/
+#define JOINT1_LOW_LIMIT_SW                0   
+#define JOINT1_HIGH_LIMIT_SW               90  
 
+#define MIN_PWM_SIGNAL              0
+#define MAX_PWM_SIGNAL              0
 /*PID Control gains*/
-#define KP_1                            1
-#define KI_1                            1
-#define KD_1                            1
+#define KP_1                            14
+#define KI_1                            15
+#define KD_1                            143
 
 /*PINS Description*/
-#define POSITIVE_DIR_PIN_1              5
-#define NEGATIVE_DIR_PIN_1              5
-#define PWM_PIN_1                           0
+#define POSITIVE_DIR_PIN_1                5
+#define NEGATIVE_DIR_PIN_1                5
+#define PWM_PIN_1           0
+#define ENCODER_A_1                     0
+#define ENCODER_B_1                     0
 #define LIMIT_SWITCH_H_PIN_1              9
 #define LIMIT_SWITCH_L_PIN_1              9
 
@@ -32,8 +38,5 @@ Arm movement preferable be within the HW limits*/
 
 
 #define ZERO_POS_1                      1.57
-
-
-
 
 
