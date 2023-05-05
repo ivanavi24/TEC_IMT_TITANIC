@@ -23,7 +23,6 @@ void i2c_onReceive(int len){
   if (len==(ARM_COMMAND_LENGTH+EXTRA_MSG_OFFSET)){
     Wire.read();//Get rid of address register
     int tempByte = Wire.read();
-    Serial.println(tempByte);
     if (tempByte == START_COMMAND){
       float xref=(float(readUint16data()))/(pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
       float yref=(float(readUint16data()))/(pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
