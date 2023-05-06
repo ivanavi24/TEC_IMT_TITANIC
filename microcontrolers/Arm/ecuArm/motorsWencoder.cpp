@@ -26,7 +26,9 @@ DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
       negative_dir_pin = motorParams.negative_dir_pin;
       pwm_pin = motorParams.pwm_pin;
       
-      
+      encoder_resolution = motorParams.encoder_resolution;
+      average_pulses = motorParams.average_pulses;
+
       min_actuator_signal=0;
       max_actuator_signal=0;
       joint_error_i=0;
@@ -78,20 +80,40 @@ unsigned int DCmotor_Encoder::satureControl(float control_action){
       return int(control_action);
     }
 void DCmotor_Encoder::setJointDesired( int desired_pulses){
-      joint_desired  = desired_pulses;
+      joint_desired  = desired_pulses*encoder_resolution;
     }
 void DCmotor_Encoder::updateCurrentJoint(){
+  static unsigned int pulseCounter = 0;
+  static int pulseCounterDirection = 0;
+  static long lastTime = 0;
+  pulseCounter++;
   int channelB_state= digitalRead(encoderB);
   if (channelB_state)
   {
     joint_current++;
+    pulseCounterDirection++;
   }
 
   else
   {
     joint_current--;
+    pulseCounterDirection--;
   }
+  
+  if(pulseCounter>=average_pulses)
+  {
+    float deltaTime = millis() - lastTime ;
+    avg_vel_pps_current =  pulseCounterDirection / deltaTime; //Average velocity in pulses per second
+    pulseCounter = 0;
+    pulseCounterDirection = 0;
+    lastTime = millis();
+  }
+  
 }
+float DCmotor_Encoder::getMotorRPM(){
+  return float(avg_vel_pps_current) / float(encoder_resolution) * SECONDS_IN_MINUTES;
+}
+
 void DCmotor_Encoder:: initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution){
   ledcSetup(ledchannel, freq, resolution);
   ledcAttachPin(pwm_pin, ledchannel);

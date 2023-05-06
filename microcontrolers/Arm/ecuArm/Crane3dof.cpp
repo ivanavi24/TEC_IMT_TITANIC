@@ -24,7 +24,9 @@ struct MotorEncoderParams joint1 =
     JOINT1_LOW_LIMIT_HW,        
     JOINT1_HIGH_LIMIT_HW, 
     JOINT1_LOW_LIMIT_SW,                  
-    JOINT1_HIGH_LIMIT_SW  
+    JOINT1_HIGH_LIMIT_SW ,
+    JOINT1_ENCODER_RESOLUTION,
+    AVG_VEL_NUM_PULSES_1 
 };
 
 struct MotorEncoderParams joint2 = 
@@ -44,7 +46,9 @@ struct MotorEncoderParams joint2 =
     JOINT2_LOW_LIMIT_HW,        
     JOINT2_HIGH_LIMIT_HW, 
     JOINT2_LOW_LIMIT_SW,                  
-    JOINT2_HIGH_LIMIT_SW  
+    JOINT2_HIGH_LIMIT_SW ,
+    JOINT2_ENCODER_RESOLUTION,
+    AVG_VEL_NUM_PULSES_2
 };
 
 struct MotorEncoderParams joint3 = 
@@ -64,7 +68,9 @@ struct MotorEncoderParams joint3 =
     JOINT3_LOW_LIMIT_HW,        
     JOINT3_HIGH_LIMIT_HW, 
     JOINT3_LOW_LIMIT_SW,                  
-    JOINT3_HIGH_LIMIT_SW  
+    JOINT3_HIGH_LIMIT_SW,
+    JOINT3_ENCODER_RESOLUTION,
+    AVG_VEL_NUM_PULSES_3  
 };
 
 
@@ -74,15 +80,13 @@ Crane3dof::Crane3dof ():first_motor(joint1),
 second_motor(joint2),
 third_motor(joint3){
   origin2water=0;
-  joint1_encoder_resolution = JOINT1_ENCODER_RESOLUTION;
-  joint2_encoder_resolution = JOINT2_ENCODER_RESOLUTION;
-  joint3_encoder_resolution = JOINT1_ENCODER_RESOLUTION;
   x_desired=0;
   y_desired=0;
   z_desired=0;
   theta=0;
   radius=0;
   z_height=0;
+
 }
 /*Assumes corrdinate frame located in the center of the robotic arm*/
 void Crane3dof::inverse_kinematics(float x, float y, float z){
@@ -100,9 +104,9 @@ void Crane3dof::reachPosition(float deltaTime){
 }
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
 void Crane3dof::setTargetJoints(){
-  int pulsesJoint1 =(theta - ZERO_POS_1)* joint1_encoder_resolution/ (2* PI);   /*  pulses per revolution [pulses/rev]*  */ 
-  int pulsesJoint2 =(radius - ZERO_POS_2)* joint2_encoder_resolution;   /*  pulses per revolution [pulses/rev]*  */ 
-  int pulsesJoint3 =(z_height - ZERO_POS_3)* joint3_encoder_resolution;   /*  pulses per revolution [pulses/rev]*  */ 
+  int pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  pulses per revolution [pulses/rev]*  */ 
+  int pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  revolutions per meter [rev/meters]*  */ 
+  int pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  revolutions per meter [pulses/rev]*  */ 
   first_motor.setJointDesired(pulsesJoint1);
   second_motor.setJointDesired(pulsesJoint2);
   third_motor.setJointDesired(pulsesJoint3);

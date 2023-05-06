@@ -30,6 +30,11 @@ struct MotorEncoderParams{
     /*SW limits to restric movement within specified range*/
     float joint_low_limit_sw;
     float joint_high_limit_sw;
+
+    /*Encoder resolutions in pulses per revolution*/
+    unsigned int encoder_resolution;
+
+    unsigned int average_pulses;
 };
 class DCmotor_Encoder{
   private: 
@@ -56,9 +61,13 @@ class DCmotor_Encoder{
     float joint_low_limit_sw;
     float joint_high_limit_sw;
 
-    
+    /*Encoder resolution in pulses per revolution*/
+    unsigned int encoder_resolution;
+    unsigned int average_pulses;
+
     int joint_desired;
     int joint_current;
+    int avg_vel_pps_current;
     float joint_error_i;
 
     
@@ -79,6 +88,7 @@ class DCmotor_Encoder{
     unsigned int satureControl(float control_action);
     void setJointDesired( int desired_pulses);
     void updateCurrentJoint();
+    float getMotorRPM();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
 
     void displayGainValues();

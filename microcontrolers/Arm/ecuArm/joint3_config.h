@@ -38,6 +38,8 @@ Arm movement preferable be within the HW limits*/
 #define PWM_RESOLUTION_3                    16
 
 
-#define ZERO_POS_3                      1.57
+#define AVG_VEL_NUM_PULSES_3                10
 
+#define ZERO_POS_3                      1.57
+#define REVOLUTIONS_PER_METER_3              1  //should be one in the first joint since movement is revolute
 

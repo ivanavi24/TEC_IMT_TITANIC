@@ -12,13 +12,10 @@ class Crane3dof{
 
     float x_desired, y_desired, z_desired; /*Set thorugh i2c communication intereruption*/
     
-    /*Encoder resolutions in pulses per revolution*/
-    unsigned int joint1_encoder_resolution;
-    unsigned int joint2_encoder_resolution ;
-    unsigned int joint3_encoder_resolution;
 
    /**/
     float theta,radius,z_height;
+    
 
   public:
   Crane3dof ();
