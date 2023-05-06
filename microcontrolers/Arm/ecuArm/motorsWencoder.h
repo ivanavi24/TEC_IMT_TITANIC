@@ -70,6 +70,7 @@ class DCmotor_Encoder{
     void updateCurrentJoint();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
     void displayGainValues();
+    
 };
 
 #endif

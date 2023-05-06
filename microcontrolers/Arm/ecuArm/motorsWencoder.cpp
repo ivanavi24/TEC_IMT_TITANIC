@@ -12,7 +12,6 @@ DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
       kp = motorParams.kp;
       kd = motorParams.kd;
       ki = motorParams.ki;
-      Serial.printf("El valor de las ganancias kp: %f  kd %f  ki %f'\n",kp,kd,ki);
       positive_dir_pin=motorParams.positive_dir_pin;
       negative_dir_pin=motorParams.negative_dir_pin;
       
@@ -82,7 +81,16 @@ void DCmotor_Encoder::setJointDesired( int desired_pulses){
       joint_desired  = desired_pulses;
     }
 void DCmotor_Encoder::updateCurrentJoint(){
-  
+  int channelB_state= digitalRead(encoderB);
+  if (channelB_state)
+  {
+    joint_current++;
+  }
+
+  else
+  {
+    joint_current--;
+  }
 }
 void DCmotor_Encoder:: initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution){
   ledcSetup(ledchannel, freq, resolution);

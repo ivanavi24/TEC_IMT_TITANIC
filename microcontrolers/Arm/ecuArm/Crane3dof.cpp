@@ -67,8 +67,6 @@ struct MotorEncoderParams joint3 =
 Crane3dof::Crane3dof ():first_motor(joint1),
 second_motor(joint2),
 third_motor(joint3){
-  Serial.begin(115200);
-  Serial.println("here");
   origin2water=0;
   joint1_encoder_resolution = JOINT1_ENCODER_RESOLUTION;
   joint2_encoder_resolution = JOINT2_ENCODER_RESOLUTION;
@@ -114,6 +112,24 @@ void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_r
   Serial.printf("Pwm motor 2 es: %d \n",dCycle);
   third_motor.moveMotor(dCycle); 
 }
+void Crane3dof::updateMotors(unsigned char index){
+  switch (index)
+  {
+  case 1:
+    first_motor.updateCurrentJoint();
+    break;
+  case 2:
+    second_motor.updateCurrentJoint();
+    break;
+  case 3:
+    third_motor.updateCurrentJoint();
+    break;
+  default:
+    break;
+  }
+  
+}
+
 void Crane3dof::printMotorGains(){
   first_motor.displayGainValues();
   second_motor.displayGainValues();

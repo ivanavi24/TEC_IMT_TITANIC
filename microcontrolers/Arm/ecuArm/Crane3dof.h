@@ -28,6 +28,9 @@ class Crane3dof{
   void setTargetJoints();
   void reachPosition(float deltaTime);
   void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
+
+  void updateMotors(unsigned char index);
+  // Auxiliary testing methods
   void printMotorGains();
 };
 
