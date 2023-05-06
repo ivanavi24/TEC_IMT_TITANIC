@@ -1,41 +1,7 @@
 #include "joints_config.h"
-
 #ifndef MOTORSWENCODER_H
 #define MOTORSWENCODER_H
-struct MotorEncoderParams{
 
-    /*Encoder*/
-    PIN encoderA;
-    PIN encoderB;
-    /*PWM*/
-    PIN positive_dir_pin;
-    PIN negative_dir_pin;
-    PIN pwm_pin;
-
-    PIN limit_switch_high;
-    PIN limit_switch_low;
-    
-    /*Values for communication unwrappping*/
-    unsigned int min_actuator_pwm_signal;
-    unsigned int max_actuator_pwm_signal;
-    
-    float kp;
-    float kd;
-    float ki;
-
-    /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
-    float joint_low_limit_hw;
-    float joint_high_limit_hw;
-    
-    /*SW limits to restric movement within specified range*/
-    float joint_low_limit_sw;
-    float joint_high_limit_sw;
-
-    /*Encoder resolutions in pulses per revolution*/
-    unsigned int encoder_resolution;
-
-    unsigned int average_pulses;
-};
 class DCmotor_Encoder{
   private: 
 

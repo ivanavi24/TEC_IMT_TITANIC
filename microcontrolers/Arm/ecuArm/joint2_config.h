@@ -1,3 +1,8 @@
+#include "joints_config.h"
+
+
+#ifndef JOINT2_PARAMS_
+#define JOINT2_PARAMS_
 
 #define JOINT2_ZERO_POSITION            60.5
 
@@ -41,3 +46,28 @@ Arm movement preferable be within the HW limits*/
 #define ZERO_POS_2                    1.57
 #define REVOLUTIONS_PER_METER_2              1  //should be one in the first joint since movement is revolute
 
+struct MotorEncoderParams joint2 = 
+{
+    ENCODER_A_2,
+    ENCODER_B_2,
+    POSITIVE_DIR_PIN_2,
+    NEGATIVE_DIR_PIN_2,
+    PWM_PIN_2,
+    LIMIT_SWITCH_H_PIN_2,
+    LIMIT_SWITCH_L_PIN_2,
+    MIN_PWM_SIGNAL,
+    MAX_PWM_SIGNAL,
+    KP_2,
+    KD_2,
+    KI_2,
+    JOINT2_LOW_LIMIT_HW,        
+    JOINT2_HIGH_LIMIT_HW, 
+    JOINT2_LOW_LIMIT_SW,                  
+    JOINT2_HIGH_LIMIT_SW ,
+    JOINT2_ENCODER_RESOLUTION,
+    AVG_VEL_NUM_PULSES_2
+};
+
+
+
+#endif
