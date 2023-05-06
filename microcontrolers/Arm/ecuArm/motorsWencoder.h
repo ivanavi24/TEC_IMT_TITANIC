@@ -7,11 +7,13 @@ struct MotorEncoderParams{
     /*Encoder*/
     PIN encoderA;
     PIN encoderB;
-
     /*PWM*/
     PIN positive_dir_pin;
     PIN negative_dir_pin;
     PIN pwm_pin;
+
+    PIN limit_switch_high;
+    PIN limit_switch_low;
     
     /*Values for communication unwrappping*/
     unsigned int min_actuator_pwm_signal;
@@ -31,30 +33,39 @@ struct MotorEncoderParams{
 };
 class DCmotor_Encoder{
   private: 
-    int joint_desired;
-    int joint_current;
-    
-    
-    unsigned int min_actuator_signal;
-    unsigned int max_actuator_signal;
-    
-    float kp, kd, ki;
-    float joint_error_i;
 
-    /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
-    float joint_low_limit_hw;
-    float joint_high_limit_hw;
-    
-    /*SW limits to restric movement within specified range*/
-    float joint_low_limit_sw;
-    float joint_high_limit_sw;
 
     PIN encoderA;
     PIN encoderB;
     PIN positive_dir_pin;
     PIN negative_dir_pin;
     PIN pwm_pin;
+    PIN limit_switch_high;
+    PIN limit_switch_low;
 
+    unsigned int min_actuator_signal;
+    unsigned int max_actuator_signal;
+
+    float kp, kd, ki;
+
+    /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
+    float joint_low_limit_hw;
+    float joint_high_limit_hw;
+
+    /*SW limits to restric movement within specified range*/
+    float joint_low_limit_sw;
+    float joint_high_limit_sw;
+
+    
+    int joint_desired;
+    int joint_current;
+    float joint_error_i;
+
+    
+    
+    
+
+    
     
   public:
     DCmotor_Encoder(MotorEncoderParams motorParams);
@@ -69,6 +80,7 @@ class DCmotor_Encoder{
     void setJointDesired( int desired_pulses);
     void updateCurrentJoint();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
+
     void displayGainValues();
     
 };
