@@ -20,6 +20,9 @@ DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
       kp = motorParams.kp;
       kd = motorParams.kd;
       ki = motorParams.ki;
+      kp_v = motorParams.kp_v;
+      kd_v = motorParams.kd_v;
+      ki_v = motorParams.ki_v;
       positive_dir_pin=motorParams.positive_dir_pin;
       negative_dir_pin=motorParams.negative_dir_pin;
       

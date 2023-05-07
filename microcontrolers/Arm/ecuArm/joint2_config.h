@@ -25,6 +25,10 @@ Arm movement preferable be within the HW limits*/
 #define KP_2                          0
 #define KI_2                          9
 #define KD_2                          1
+#define KP_V_2                          1
+#define KD_V_2                          1
+#define KI_V_2                          1
+
 
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_2              5
@@ -60,6 +64,9 @@ struct MotorEncoderParams joint2 =
     KP_2,
     KD_2,
     KI_2,
+    KP_V_2,
+    KD_V_2,
+    KI_V_2,
     JOINT2_LOW_LIMIT_HW,        
     JOINT2_HIGH_LIMIT_HW, 
     JOINT2_LOW_LIMIT_SW,                  

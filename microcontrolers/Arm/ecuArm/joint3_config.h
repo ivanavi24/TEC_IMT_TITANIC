@@ -24,6 +24,9 @@ Arm movement preferable be within the HW limits*/
 #define KP_3                            2
 #define KI_3                            7
 #define KD_3                            4
+#define KP_V_3                          1
+#define KD_V_3                          1
+#define KI_V_3                          1
 
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_3                5
@@ -59,6 +62,9 @@ struct MotorEncoderParams joint3 =
     KP_3,
     KD_3,
     KI_3,
+    KP_V_3,
+    KD_V_3,
+    KI_V_3,
     JOINT3_LOW_LIMIT_HW,        
     JOINT3_HIGH_LIMIT_HW, 
     JOINT3_LOW_LIMIT_SW,                  

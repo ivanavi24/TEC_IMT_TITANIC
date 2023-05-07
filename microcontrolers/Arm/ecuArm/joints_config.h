@@ -27,6 +27,9 @@ struct MotorEncoderParams{
     float kp;
     float kd;
     float ki;
+    float kp_v;
+    float kd_v;
+    float ki_v;
 
     /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
     float joint_low_limit_hw;
