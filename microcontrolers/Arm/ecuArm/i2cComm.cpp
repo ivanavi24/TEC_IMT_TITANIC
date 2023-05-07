@@ -29,7 +29,7 @@ void i2c_onReceive(int len){
       float zref=(float(readUint16data()))/ (pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
       Serial.print(" X:  ");Serial.printf("%f",xref);Serial.print("  Y: ");Serial.printf("%f",yref);Serial.print(" Z: ");Serial.printf("%f\n",zref);
       float pwmArr[3]={xref,yref,zref};
-      titanicCrane.moveMotors(pwmArr, MIN_VALUE_CMD_1,MAX_VALUE_CMD_1, 16);
+      titanicCrane.moveMotors(pwmArr, MIN_VALUE_CMD_1,MAX_VALUE_CMD_1, BIT_SIZE_FORMAT);
       tempByte = Wire.read();
       if(tempByte == END_COMMAND){
         Serial.println("Communication success");

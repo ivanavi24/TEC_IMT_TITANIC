@@ -2,7 +2,7 @@
 
 
 #include "Arduino.h"
-
+#define PI            3.1415926535
 DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
       
 
@@ -144,6 +144,15 @@ void DCmotor_Encoder::updateCurrentJoint(){
     lastTime = millis();
   }
   
+}
+void DCmotor_Encoder::setReferencePoint(unsigned char value){
+  if (value){
+    joint_current = joint_high_limit_hw/(2*PI)*float(encoder_resolution);
+  }
+  else if (!value){ /*Set joint current value to zero val*/
+    joint_current = ZERO_VAL_INITIALIZER;
+  }
+
 }
 float DCmotor_Encoder::getMotorRPM(){
   return float(avg_vel_pps_current) / float(encoder_resolution) * SECONDS_IN_MINUTES;

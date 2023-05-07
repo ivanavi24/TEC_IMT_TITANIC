@@ -6,8 +6,13 @@
 #include "Crane3dof.h"
 #include "math.h"
 #include "Arduino.h"
-#define PI                          3.14159265
 
+
+#define PI                          3.14159265
+#define RADIUS_MIN          0.3
+#define RADIUS_MAX          0.5
+#define THETA_MIN          0.3
+#define THETA_MAX          0.5
 
 
 
@@ -25,11 +30,34 @@ third_motor(joint3){
 }
 /*Assumes corrdinate frame located in the center of the robotic arm*/
 void Crane3dof::inverse_kinematics(float x, float y, float z){
-  theta =atan2(x,y);
-  radius =sqrt(pow(x,2)+pow(y,2));
-  z_height = z + origin2water; 
+  float thetaWorld =atan2(x,y);
+  float radiusWorld =sqrt(pow(x,2)+pow(y,2));
+  float z_world= z + origin2water; 
+  if ( abs (thetaWorld) > (PI / 2) ){
+    if( thetaWorld >0){
+      thetaWorld -= PI;
+    }
+    else if ( thetaWorld <0){
+      thetaWorld += PI;
+    }
+    //some flag here
+    restrict2Workspace(thetaWorld, radiusWorld, z_world, 1);
+  }
+  restrict2Workspace(thetaWorld, radiusWorld, z_world, 0);
 }
+void Crane3dof::restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag){
+  bool radiusFlag = false;
+  bool thetaFlag = false;
+  if( (radiusW>RADIUS_MIN) && (radiusW<RADIUS_MAX)){radiusFlag = true;}
+  if( (thetaW>THETA_MIN) && (thetaW<THETA_MAX)){radiusFlag = true;}
+  if (radiusFlag && thetaFlag){
+    theta = thetaW;
+    radius = radiusW;
+    z_height = zW;
 
+  }
+  
+}
 void Crane3dof::reachPosition(float deltaTime){
   
   first_motor.move2position(deltaTime);
@@ -39,9 +67,9 @@ void Crane3dof::reachPosition(float deltaTime){
 }
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
 void Crane3dof::setTargetJoints(){
-  int pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  pulses per revolution [pulses/rev]*  */ 
-  int pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  revolutions per meter [rev/meters]*  */ 
-  int pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  revolutions per meter [pulses/rev]*  */ 
+  int pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  [radians]/[radians] = revolutions */ 
+  int pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  [meters]*[rev/meter] = revolutions  */ 
+  int pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  [meters]*[rev/meter] = revolutions  */ 
   first_motor.setJointDesired(pulsesJoint1);
   second_motor.setJointDesired(pulsesJoint2);
   third_motor.setJointDesired(pulsesJoint3);
@@ -73,6 +101,22 @@ void Crane3dof::updateMotors(unsigned char index){
     break;
   }
   
+}
+void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
+  switch (index)
+  {
+  case 1:
+    first_motor.setReferencePoint(value);
+    break;
+  case 2:
+    second_motor.setReferencePoint(value);
+    break;
+  case 3:
+    third_motor.setReferencePoint(value);
+    break;
+  default:
+    break;
+  }
 }
 
 void Crane3dof::printMotorGains(){

@@ -57,13 +57,14 @@ class DCmotor_Encoder{
     void positiveMovement();
     void negativeMovement();
     void stopMovement();
+    
     unsigned int satureControl(float control_action);
     void setJointDesired( int desired_pulses);
     void setVelocityDesiredRPM( float desired_velocity);
     void updateCurrentJoint();
     float getMotorRPM();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
-
+    void setReferencePoint(unsigned char value);
     void displayGainValues();
     
 };

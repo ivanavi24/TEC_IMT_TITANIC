@@ -1,6 +1,6 @@
 #include "i2cComm.h"
 #include "Crane3dof.h"
-#include "encodersSetup.h"
+#include "isr.h"
 
 
 #define PID_INTERVAL 5000

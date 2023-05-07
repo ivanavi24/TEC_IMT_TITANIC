@@ -21,12 +21,15 @@ class Crane3dof{
   Crane3dof ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
   void inverse_kinematics(float x, float y, float z);
+  void restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag);
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
   void setTargetJoints();
   void reachPosition(float deltaTime);
   void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
 
   void updateMotors(unsigned char index);
+
+  void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
   void printMotorGains();
 };
