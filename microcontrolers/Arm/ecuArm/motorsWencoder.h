@@ -18,6 +18,8 @@ class DCmotor_Encoder{
     unsigned int max_actuator_signal;
 
     float kp, kd, ki;
+    float kp_v, kd_v, ki_v;
+
 
     /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
     float joint_low_limit_hw;
@@ -33,9 +35,11 @@ class DCmotor_Encoder{
 
     int joint_desired;
     int joint_current;
-    int avg_vel_pps_current;
     float joint_error_i;
 
+    float joint_velocity_desired;
+    float  joint_velocity_error_i;
+    int avg_vel_pps_current;
     
     
     
@@ -45,14 +49,17 @@ class DCmotor_Encoder{
   public:
     DCmotor_Encoder(MotorEncoderParams motorParams);
     void move2position(float deltaTime);
+    void moveWVelocity(float deltaTime);
     void moveMotor(int duty_cycle);
     void moveDirection();
+    void moveDirectionVelocity();
     /*Refer to documentation https://www.sparkfun.com/datasheets/Robotics/L298_H_Bridge.pdf */
     void positiveMovement();
     void negativeMovement();
     void stopMovement();
     unsigned int satureControl(float control_action);
     void setJointDesired( int desired_pulses);
+    void setVelocityDesiredRPM( float desired_velocity);
     void updateCurrentJoint();
     float getMotorRPM();
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
