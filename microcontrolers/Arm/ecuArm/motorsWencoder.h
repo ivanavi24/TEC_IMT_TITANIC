@@ -39,8 +39,8 @@ class DCmotor_Encoder{
 
     float joint_velocity_desired;
     float  joint_velocity_error_i;
-    int avg_vel_pps_current;
     
+    double avg_vel_pps_current;
     
     
 
@@ -48,6 +48,12 @@ class DCmotor_Encoder{
     
   public:
     DCmotor_Encoder(MotorEncoderParams motorParams);
+    float getMotorRPM();
+    float getMotorFrequency();
+
+    void setPositionGains(float kpV, float kdV, float kiV);
+    void setVelocityGains(float kpV, float kdV, float kiV);
+
     void move2position(float deltaTime);
     void moveWVelocity(float deltaTime);
     void moveMotor(int duty_cycle);
@@ -62,10 +68,14 @@ class DCmotor_Encoder{
     void setJointDesired( int desired_pulses);
     void setVelocityDesiredRPM( float desired_velocity);
     void updateCurrentJoint();
-    float getMotorRPM();
-    void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
+    
+    
     void setReferencePoint(unsigned char value);
+
     void displayGainValues();
+
+    void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
+    void initilizeEncoders();
     
 };
 

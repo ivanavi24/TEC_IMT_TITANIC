@@ -34,8 +34,8 @@ Arm movement preferable be within the HW limits*/
 #define POSITIVE_DIR_PIN_2              5
 #define NEGATIVE_DIR_PIN_2              5
 #define PWM_PIN_2         0
-#define ENCODER_A_2                   0
-#define ENCODER_B_2                   0
+#define ENCODER_A_2                   22
+#define ENCODER_B_2                   23
 #define LIMIT_SWITCH_H_PIN_2            9
 #define LIMIT_SWITCH_L_PIN_2            9
 

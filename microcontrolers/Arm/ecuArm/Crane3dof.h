@@ -31,7 +31,12 @@ class Crane3dof{
 
   void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
+
+  void setTargetRPM();
   void printMotorGains();
+  void displayEncodersFrequency();
+  
+  void initializeVars();
 };
 
 

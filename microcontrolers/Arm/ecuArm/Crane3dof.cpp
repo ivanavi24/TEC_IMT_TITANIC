@@ -2,6 +2,7 @@
 #include "joint1_config.h"
 #include "joint2_config.h"
 #include "joint3_config.h"
+#include "isr.h"
 
 #include "Crane3dof.h"
 #include "math.h"
@@ -118,10 +119,40 @@ void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
     break;
   }
 }
+void Crane3dof::setTargetRPM(){
+  float velocity1,velocity2,velocity3;
+  Serial.println("Desired RPM MOTOR1: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  velocity1 = Serial.parseFloat();  
+  Serial.println("Desired RPM MOTOR2: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  velocity2 = Serial.parseFloat();  
+  Serial.println("Desired RPM MOTOR2: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  velocity3 = Serial.parseFloat(); 
 
+  first_motor.setVelocityDesiredRPM(velocity1);
+  second_motor.setVelocityDesiredRPM(velocity2);
+  third_motor.setVelocityDesiredRPM(velocity3);
+}
+void Crane3dof::displayEncodersFrequency(){
+  Serial.printf("Motor 1 frequency: %f\n",first_motor.getMotorFrequency());
+  Serial.printf("Motor 2 frequency: %f\n",first_motor.getMotorRPM());
+  Serial.printf("Motor 3 frequency: %f\n",third_motor.getMotorFrequency());
+  Serial.println("");
+}
 void Crane3dof::printMotorGains(){
   first_motor.displayGainValues();
   second_motor.displayGainValues();
   third_motor.displayGainValues();
 }
+void Crane3dof::initializeVars(){
+  first_motor.initilizeEncoders();
+  attachInterrupt(34, ISR__ENCODER_JOINT1, FALLING);
+  //second_motor.initilizeEncoders();
+  //third_motor.initilizeEncoders();
+};
 
