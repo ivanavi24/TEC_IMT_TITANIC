@@ -2,6 +2,7 @@
 #include "joint1_config.h"
 #include "joint2_config.h"
 #include "joint3_config.h"
+#include "mode_configuration.h"
 #include "isr.h"
 
 #include "Crane3dof.h"
@@ -41,44 +42,44 @@ DCmotor_Encoder Crane3dof::get_third_motor(){
 }
 
 /*Setter methods*/
-void Crane3dof::setTargetRPM(unsigned int index){
+void Crane3dof::setTargetRPM(unsigned char index){
   float velocity;
-  Serial.printf("Desired RPM MOTOR %d: ",index);      //Prompt User for input
+  Serial.printf("Desired RPM MOTOR %u: ",index);      //Prompt User for input
   while (Serial.available()==0)  {
   }
   velocity = Serial.parseFloat();
   Serial.println(velocity);  
   switch (index)
   {
-  case 1:
+  case MOTOR1:
     first_motor.setVelocityDesiredRPM(velocity);
     break;
-  case 2:
+  case MOTOR2:
     second_motor.setVelocityDesiredRPM(velocity);
     break;
-  case 3:
+  case MOTOR3:
     third_motor.setVelocityDesiredRPM(velocity);
     break;
   default:
     break;
   } 
 }
-void Crane3dof::setTargetAngle(unsigned int index){
+void Crane3dof::setTargetAngle(unsigned char index){
   float angle;
-  Serial.printf("Desired Angle MOTOR%d [degrees]: ",index);      //Prompt User for input
+  Serial.printf("Desired Angle MOTOR%u [degrees]: ",index);      //Prompt User for input
   while (Serial.available()==0)  {
   }
   angle = Serial.parseFloat();
   Serial.println(angle);  
   switch (index)
   {
-  case 1:
+  case MOTOR1:
     first_motor.setJointDesiredFromAngle(angle);
     break;
-  case 2:
+  case MOTOR2:
     second_motor.setJointDesiredFromAngle(angle);
     break;
-  case 3:
+  case MOTOR3:
     third_motor.setJointDesiredFromAngle(angle);
     break;
   default:
@@ -146,13 +147,13 @@ void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_r
 void Crane3dof::updateMotors(unsigned char index){
   switch (index)
   {
-  case 1:
+  case MOTOR1:
     first_motor.updateCurrentJoint();
     break;
-  case 2:
+  case MOTOR2:
     second_motor.updateCurrentJoint();
     break;
-  case 3:
+  case MOTOR3:
     third_motor.updateCurrentJoint();
     break;
   default:
@@ -177,33 +178,46 @@ void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
   }
 }
 
-void Crane3dof::adjustMotorGains(){
-  float kp1,kd1,ki1;
-  Serial.print("Motor1 kp: ");      //Prompt User for input
+void Crane3dof::adjustMotorGains(unsigned char index){
+  float kp,kd,ki;
+  Serial.printf("Motor%u kp: ",index);      //Prompt User for input
   while (Serial.available()==0)  {
   }
-  kp1 = Serial.parseFloat();
-  Serial.printf("%f\n",kp1);
-  Serial.print("Motor1 kd: "); 
+  kp = Serial.parseFloat();
+  Serial.printf("%f\n",kp);
+  Serial.printf("Motor%u kd: ",index); 
   while (Serial.available()==0)  {
   }
-  kd1 = Serial.parseFloat();  
-  Serial.printf("%f\n",kd1);
-  Serial.print("Motor1 ki: "); 
+  kd = Serial.parseFloat();  
+  Serial.printf("%f\n",kd);
+  Serial.printf("Motor%u ki: ",index); 
   while (Serial.available()==0)  {
   }
-  ki1 = Serial.parseFloat();
-  Serial.printf("%f\n",ki1);    
-  first_motor.setPositionGains(kp1,kd1,ki1);
+  ki = Serial.parseFloat();
+  Serial.printf("%f\n",ki);
+  switch (index)
+  {
+  case MOTOR1:
+    first_motor.setPositionGains(kp,kd,ki);
+    break;
+  case MOTOR2:
+    second_motor.setPositionGains(kp,kd,ki);
+    break;
+  case MOTOR3:
+    third_motor.setPositionGains(kp,kd,ki);
+    break;
+  default:
+    break;
+  }
 
 }
-void Crane3dof::displayEncodersFrequency(){
+void Crane3dof::displayEncodersFrequency(unsigned char index){
   Serial.printf("Motor 1 frequency: %f\n",first_motor.getMotorFrequency());
   Serial.printf("Motor 2 frequency: %f\n",first_motor.getMotorRPM());
   Serial.printf("Motor 3 frequency: %f\n",third_motor.getMotorFrequency());
   Serial.println("");
 }
-void Crane3dof::printMotorGains(){
+void Crane3dof::printMotorGains(unsigned char index){
   first_motor.displayGainValues();
   second_motor.displayGainValues();
   third_motor.displayGainValues();

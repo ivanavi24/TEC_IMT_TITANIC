@@ -26,9 +26,13 @@ class Crane3dof{
   DCmotor_Encoder get_third_motor();
 
   /*Setter methods*/
-  void setTargetRPM(unsigned int index);
-  void setTargetAngle(unsigned int index);
+  void setTargetRPM(unsigned char index);
+  void setTargetAngle(unsigned char index);
 
+
+  void adjustMotorGains(unsigned char index);
+  void printMotorGains(unsigned char index);
+  void displayEncodersFrequency(unsigned char index);
   /*Inverse kinematic calculate */
   void inverse_kinematics(float x, float y, float z);
   void restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag);
@@ -41,10 +45,9 @@ class Crane3dof{
 
   void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
-  void adjustMotorGains();
   
-  void printMotorGains();
-  void displayEncodersFrequency();
+  
+  
   
   void initializeVars();
 };
