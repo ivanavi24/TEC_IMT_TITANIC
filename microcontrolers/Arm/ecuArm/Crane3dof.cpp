@@ -29,9 +29,63 @@ third_motor(joint3){
   z_height=0;
 
 }
+/*Getter Methods*/
 DCmotor_Encoder Crane3dof::get_first_motor(){
   return first_motor;
 }
+DCmotor_Encoder Crane3dof::get_second_motor(){
+  return second_motor;
+}
+DCmotor_Encoder Crane3dof::get_third_motor(){
+  return third_motor;
+}
+
+/*Setter methods*/
+void Crane3dof::setTargetRPM(unsigned int index){
+  float velocity;
+  Serial.printf("Desired RPM MOTOR %d: ",index);      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  velocity = Serial.parseFloat();
+  Serial.println(velocity);  
+  switch (index)
+  {
+  case 1:
+    first_motor.setVelocityDesiredRPM(velocity);
+    break;
+  case 2:
+    second_motor.setVelocityDesiredRPM(velocity);
+    break;
+  case 3:
+    third_motor.setVelocityDesiredRPM(velocity);
+    break;
+  default:
+    break;
+  } 
+}
+void Crane3dof::setTargetAngle(unsigned int index){
+  float angle;
+  Serial.printf("Desired Angle MOTOR%d [degrees]: ",index);      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  angle = Serial.parseFloat();
+  Serial.println(angle);  
+  switch (index)
+  {
+  case 1:
+    first_motor.setJointDesiredFromAngle(angle);
+    break;
+  case 2:
+    second_motor.setJointDesiredFromAngle(angle);
+    break;
+  case 3:
+    third_motor.setJointDesiredFromAngle(angle);
+    break;
+  default:
+    break;
+  }
+}
+
 /*Assumes corrdinate frame located in the center of the robotic arm*/
 void Crane3dof::inverse_kinematics(float x, float y, float z){
   float thetaWorld =atan2(x,y);
@@ -122,34 +176,7 @@ void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
     break;
   }
 }
-void Crane3dof::setTargetRPM(){
-  float velocity1,velocity2,velocity3;
-  Serial.println("Desired RPM MOTOR1: ");      //Prompt User for input
-  while (Serial.available()==0)  {
-  }
-  velocity1 = Serial.parseFloat();  
-  /*
-  Serial.println("Desired RPM MOTOR2: ");      //Prompt User for input
-  while (Serial.available()==0)  {
-  }
-  velocity2 = Serial.parseFloat();  
-  Serial.println("Desired RPM MOTOR2: ");      //Prompt User for input
-  while (Serial.available()==0)  {
-  }
-  velocity3 = Serial.parseFloat(); 
-  */
-  first_motor.setVelocityDesiredRPM(velocity1);
-  //second_motor.setVelocityDesiredRPM(velocity2);
-  //third_motor.setVelocityDesiredRPM(velocity3);
-}
-void Crane3dof::setTargetAngle(){
-  float angle1,velocity2,velocity3;
-  Serial.println("Desired Angle MOTOR1[degrees]: ");      //Prompt User for input
-  while (Serial.available()==0)  {
-  }
-  angle1 = Serial.parseFloat();  
-  first_motor.setJointDesiredFromAngle(angle1);
-}
+
 void Crane3dof::adjustMotorGains(){
   float kp1,kd1,ki1;
   Serial.print("Motor1 kp: ");      //Prompt User for input

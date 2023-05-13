@@ -44,7 +44,7 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
       titanicCrane.get_first_motor().stopMovement();
       counter=0;
       titanicCrane.adjustMotorGains();
-      titanicCrane.setTargetAngle();
+      titanicCrane.setTargetAngle(1);
       
       Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_first_motor().getJointCurrentVal(),titanicCrane.get_first_motor().getDesiredJointVal());
       titanicCrane.get_first_motor().move2position(time_now - time_last);
