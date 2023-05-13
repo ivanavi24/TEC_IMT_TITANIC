@@ -47,9 +47,11 @@ class DCmotor_Encoder{
     
     
   public:
+    int controlActionval;
     DCmotor_Encoder(MotorEncoderParams motorParams);
     float getMotorRPM();
     float getMotorFrequency();
+    PIN getEncoderA();
 
     void setPositionGains(float kpV, float kdV, float kiV);
     void setVelocityGains(float kpV, float kdV, float kiV);
@@ -64,12 +66,12 @@ class DCmotor_Encoder{
     void negativeMovement();
     void stopMovement();
     
-    unsigned int satureControl(float control_action);
+    int satureControl(float control_action);
     void setJointDesired( int desired_pulses);
     void setVelocityDesiredRPM( float desired_velocity);
     void updateCurrentJoint();
     
-    
+    void setJointDesiredFromAngle( float desired_angle);
     void setReferencePoint(unsigned char value);
 
     void displayGainValues();
@@ -77,6 +79,8 @@ class DCmotor_Encoder{
     void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
     void initilizeEncoders();
     
+    int getJointCurrentVal();
+    int getDesiredJointVal();
 };
 
 #endif

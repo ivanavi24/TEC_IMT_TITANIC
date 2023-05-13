@@ -1,12 +1,12 @@
 
 #include "isr.h"
-#include "Arduino.h"
-float dummyVar;
+
+
 void IRAM_ATTR ISR__ENCODER_JOINT1(){
-    //titanicCrane.updateMotors(MOTOR1);
-    dummyVar++;
+    titanicCrane.updateMotors(MOTOR1);
+
 }
-void ISR__LIMIT_SWITCH_H_JOINT1(){
+void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT1(){
     titanicCrane.updateMotors(MOTOR1);
 }
 void ISR__LIMIT_SWITCH_L_JOINT1(){

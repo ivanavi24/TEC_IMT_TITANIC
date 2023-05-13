@@ -29,6 +29,9 @@ third_motor(joint3){
   z_height=0;
 
 }
+DCmotor_Encoder Crane3dof::get_first_motor(){
+  return first_motor;
+}
 /*Assumes corrdinate frame located in the center of the robotic arm*/
 void Crane3dof::inverse_kinematics(float x, float y, float z){
   float thetaWorld =atan2(x,y);
@@ -125,6 +128,7 @@ void Crane3dof::setTargetRPM(){
   while (Serial.available()==0)  {
   }
   velocity1 = Serial.parseFloat();  
+  /*
   Serial.println("Desired RPM MOTOR2: ");      //Prompt User for input
   while (Serial.available()==0)  {
   }
@@ -133,10 +137,38 @@ void Crane3dof::setTargetRPM(){
   while (Serial.available()==0)  {
   }
   velocity3 = Serial.parseFloat(); 
-
+  */
   first_motor.setVelocityDesiredRPM(velocity1);
-  second_motor.setVelocityDesiredRPM(velocity2);
-  third_motor.setVelocityDesiredRPM(velocity3);
+  //second_motor.setVelocityDesiredRPM(velocity2);
+  //third_motor.setVelocityDesiredRPM(velocity3);
+}
+void Crane3dof::setTargetAngle(){
+  float angle1,velocity2,velocity3;
+  Serial.println("Desired Angle MOTOR1[degrees]: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  angle1 = Serial.parseFloat();  
+  first_motor.setJointDesiredFromAngle(angle1);
+}
+void Crane3dof::adjustMotorGains(){
+  float kp1,kd1,ki1;
+  Serial.print("Motor1 kp: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  kp1 = Serial.parseFloat();
+  Serial.printf("%f\n",kp1);
+  Serial.print("Motor1 kd: "); 
+  while (Serial.available()==0)  {
+  }
+  kd1 = Serial.parseFloat();  
+  Serial.printf("%f\n",kd1);
+  Serial.print("Motor1 ki: "); 
+  while (Serial.available()==0)  {
+  }
+  ki1 = Serial.parseFloat();
+  Serial.printf("%f\n",ki1);    
+  first_motor.setPositionGains(kp1,kd1,ki1);
+
 }
 void Crane3dof::displayEncodersFrequency(){
   Serial.printf("Motor 1 frequency: %f\n",first_motor.getMotorFrequency());
@@ -151,7 +183,8 @@ void Crane3dof::printMotorGains(){
 }
 void Crane3dof::initializeVars(){
   first_motor.initilizeEncoders();
-  attachInterrupt(34, ISR__ENCODER_JOINT1, FALLING);
+  attachInterrupt(first_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
+  //first_motor.initializePWM(0,30000,8);
   //second_motor.initilizeEncoders();
   //third_motor.initilizeEncoders();
 };

@@ -20,6 +20,7 @@ class Crane3dof{
   public:
   Crane3dof ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
+  DCmotor_Encoder get_first_motor();
   void inverse_kinematics(float x, float y, float z);
   void restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag);
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
@@ -31,8 +32,9 @@ class Crane3dof{
 
   void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
-
+  void adjustMotorGains();
   void setTargetRPM();
+  void setTargetAngle();
   void printMotorGains();
   void displayEncodersFrequency();
   
