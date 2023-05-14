@@ -23,6 +23,9 @@ struct MotorEncoderParams{
     /*Values for communication unwrappping*/
     unsigned int min_actuator_pwm_signal;
     unsigned int max_actuator_pwm_signal;
+    unsigned char pwm_channel;
+    unsigned int pwm_frquency;
+    unsigned char pwm_resolution;
     
     float kp;
     float kd;

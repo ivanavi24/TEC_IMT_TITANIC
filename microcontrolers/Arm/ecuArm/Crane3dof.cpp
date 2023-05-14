@@ -223,10 +223,19 @@ void Crane3dof::printMotorGains(unsigned char index){
   third_motor.displayGainValues();
 }
 void Crane3dof::initializeVars(){
+
   first_motor.initilizeEncoders();
+  first_motor.initializePWM();
   attachInterrupt(first_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
-  //first_motor.initializePWM(0,30000,8);
-  //second_motor.initilizeEncoders();
-  //third_motor.initilizeEncoders();
+
+  second_motor.initilizeEncoders();
+  second_motor.initializePWM();
+  attachInterrupt(second_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
+  
+  third_motor.initilizeEncoders();
+  third_motor.initializePWM();
+  attachInterrupt(third_motor.getEncoderA(), ISR__ENCODER_JOINT3, FALLING);
+  
+  
 };
 

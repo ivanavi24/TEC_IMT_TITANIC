@@ -17,6 +17,10 @@ class DCmotor_Encoder{
     unsigned int min_actuator_signal;
     unsigned int max_actuator_signal;
 
+    unsigned char pwm_channel;
+    unsigned int pwm_frquency;
+    unsigned char pwm_resolution;
+
     float kp, kd, ki;
     float kp_v, kd_v, ki_v;
 
@@ -47,11 +51,14 @@ class DCmotor_Encoder{
     
     
   public:
-    int controlActionval;
+    
     DCmotor_Encoder(MotorEncoderParams motorParams);
+    /*Getters*/
     float getMotorRPM();
     float getMotorFrequency();
     PIN getEncoderA();
+    int getJointCurrentVal();
+    int getDesiredJointVal();
 
     void setPositionGains(float kpV, float kdV, float kiV);
     void setVelocityGains(float kpV, float kdV, float kiV);
@@ -76,11 +83,10 @@ class DCmotor_Encoder{
 
     void displayGainValues();
 
-    void initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution);
+    void initializePWM();
     void initilizeEncoders();
     
-    int getJointCurrentVal();
-    int getDesiredJointVal();
+    
 };
 
 #endif

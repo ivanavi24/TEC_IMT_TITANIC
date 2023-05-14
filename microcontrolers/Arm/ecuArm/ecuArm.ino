@@ -16,9 +16,6 @@ void setup() {
   
   i2c_setSlave();
   titanicCrane.initializeVars();
-  pinMode(27,OUTPUT);
-  ledcSetup(0, 30000, 8);
-  ledcAttachPin(27, 0);
   Serial.begin(115200);
 
 }
@@ -48,7 +45,6 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
       
       Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_first_motor().getJointCurrentVal(),titanicCrane.get_first_motor().getDesiredJointVal());
       titanicCrane.get_first_motor().move2position(time_now - time_last);
-      Serial.printf("PWM: %i\n",titanicCrane.get_first_motor().controlActionval);
       
     }
     time_last=millis();

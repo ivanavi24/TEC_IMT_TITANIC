@@ -17,6 +17,13 @@ DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
 
       max_actuator_signal = motorParams.max_actuator_pwm_signal;
       min_actuator_signal = motorParams.min_actuator_pwm_signal;
+
+
+      pwm_channel = motorParams.pwm_channel;
+      pwm_frquency = motorParams.pwm_frquency;
+      pwm_resolution = motorParams.pwm_resolution;
+
+
       kp = motorParams.kp;
       kd = motorParams.kd;
       ki = motorParams.ki;
@@ -66,9 +73,7 @@ void DCmotor_Encoder::move2position(float deltaTime){
       Serial.printf("Delta %f \n",deltaTime);
       Serial.printf("Joint error control %f \n",joint_control);
       moveDirection();
-      controlActionval = satureControl(joint_control);
-      Serial.printf("Joint error control %d \n",controlActionval);
-      moveMotor(controlActionval);
+      moveMotor(satureControl(joint_control));
 }
 float DCmotor_Encoder::getMotorRPM(){
   return float(avg_vel_pps_current) / float(encoder_resolution) * SECONDS_IN_MINUTES;
@@ -191,12 +196,12 @@ void DCmotor_Encoder::setReferencePoint(unsigned char value){
 }
 
 
-void DCmotor_Encoder:: initializePWM(unsigned char ledchannel, unsigned int freq, unsigned char resolution){
+void DCmotor_Encoder:: initializePWM(){
   pinMode(pwm_pin,OUTPUT);
   pinMode(positive_dir_pin,OUTPUT);
   pinMode(negative_dir_pin,OUTPUT);
-  ledcSetup(ledchannel, freq, resolution);
-  ledcAttachPin(pwm_pin, ledchannel);
+  ledcSetup(pwm_channel, pwm_frquency, pwm_resolution);
+  ledcAttachPin(pwm_pin, pwm_channel);
   
 }
 void DCmotor_Encoder::initilizeEncoders(){
