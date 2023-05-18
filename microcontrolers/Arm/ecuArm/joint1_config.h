@@ -6,7 +6,7 @@
 #define JOINT1_ZERO_POSITION            60.5
 
 /*Encoder resoluition in pulses per meter [pulses/m]*/
-#define JOINT1_ENCODER_RESOLUTION       920
+#define JOINT1_ENCODER_RESOLUTION       920*18
 
 /*Joint movement limit in terms of pulses 
 (Low limit is 0, since start rutine sets zero with limite switch)
@@ -30,18 +30,18 @@ Arm movement preferable be within the HW limits*/
 
 
 /*PINS Description*/
-#define POSITIVE_DIR_PIN_1                26
-#define NEGATIVE_DIR_PIN_1                25
-#define PWM_PIN_1           27
-#define ENCODER_A_1                     18
-#define ENCODER_B_1                     19
+#define POSITIVE_DIR_PIN_1                2
+#define NEGATIVE_DIR_PIN_1                19
+#define PWM_PIN_1           17
+#define ENCODER_A_1                     32
+#define ENCODER_B_1                     33
 #define LIMIT_SWITCH_H_PIN_1              9
 #define LIMIT_SWITCH_L_PIN_1              9
 
 /*PWM configuration*/
 #define PWM_CHANNEL_1                       0
 #define PWM_FREQUENCY_1                   5000
-#define PWM_RESOLUTION_1                    16
+#define PWM_RESOLUTION_1                    8
 
 
 #define AVG_VEL_NUM_PULSES_1                50

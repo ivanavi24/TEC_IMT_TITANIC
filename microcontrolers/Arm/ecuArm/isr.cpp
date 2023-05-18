@@ -18,10 +18,10 @@ void IRAM_ATTR ISR__ENCODER_JOINT2(){
     titanicCrane.updateMotors(MOTOR2);
 }
 void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT2(){
-    titanicCrane.updateMotors(MOTOR1);
+    titanicCrane.updateMotors(MOTOR2);
 }
 void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT2(){
-    titanicCrane.updateMotors(MOTOR1);
+    titanicCrane.updateMotors(MOTOR2);
 }
 
 
@@ -29,8 +29,8 @@ void IRAM_ATTR ISR__ENCODER_JOINT3(){
     titanicCrane.updateMotors(MOTOR3);
 }
 void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT3(){
-    titanicCrane.updateMotors(MOTOR1);
+    titanicCrane.updateMotors(MOTOR3);
 }
 void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT3(){
-    titanicCrane.updateMotors(MOTOR1);
+    titanicCrane.updateMotors(MOTOR3);
 }

@@ -1,6 +1,5 @@
 #include "joints_config.h"
 
-
 #ifndef JOINT2_PARAMS_
 #define JOINT2_PARAMS_
 
@@ -33,7 +32,7 @@ Arm movement preferable be within the HW limits*/
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_2              5
 #define NEGATIVE_DIR_PIN_2              5
-#define PWM_PIN_2         0
+#define PWM_PIN_2         5
 #define ENCODER_A_2                   22
 #define ENCODER_B_2                   23
 #define LIMIT_SWITCH_H_PIN_2            9
@@ -42,7 +41,7 @@ Arm movement preferable be within the HW limits*/
 /*PWM configuration*/
 #define PWM_CHANNEL_2                     0
 #define PWM_FREQUENCY_2                 5000
-#define PWM_RESOLUTION_2                  16
+#define PWM_RESOLUTION_2                  8
 
 
 #define AVG_VEL_NUM_PULSES_2                10

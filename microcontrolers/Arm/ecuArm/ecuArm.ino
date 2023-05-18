@@ -4,7 +4,7 @@
 #include "isr.h"
 
 
-#define PID_INTERVAL 2000
+#define PID_INTERVAL 20
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
@@ -38,12 +38,13 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     
     counter++;
     if(counter >= countTimes){
+      Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_first_motor().getJointCurrentVal(),titanicCrane.get_first_motor().getDesiredJointVal());
       titanicCrane.get_first_motor().stopMovement();
       counter=0;
       titanicCrane.adjustMotorGains(CURRENT_SELECTED_MOTOR);
       titanicCrane.setTargetAngle(CURRENT_SELECTED_MOTOR);
       
-      Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_first_motor().getJointCurrentVal(),titanicCrane.get_first_motor().getDesiredJointVal());
+      
       titanicCrane.get_first_motor().move2position(time_now - time_last);
       
     }
@@ -65,7 +66,7 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
 #elif (CURRENT_OPERATION_MODE==DISPLAY_MOTORS_VEL)
 if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     /*Control action*/  
-    titanicCrane.displayEncodersFrequency();
+    titanicCrane.displayEncodersFrequency(CURRENT_SELECTED_MOTOR);
     time_last=millis();
 
   }

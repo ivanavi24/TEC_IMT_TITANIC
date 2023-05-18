@@ -226,6 +226,7 @@ void Crane3dof::initializeVars(){
 
   first_motor.initilizeEncoders();
   first_motor.initializePWM();
+  first_motor.stopMovement();
   attachInterrupt(first_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
 
   second_motor.initilizeEncoders();
@@ -233,7 +234,6 @@ void Crane3dof::initializeVars(){
   attachInterrupt(second_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
   
   third_motor.initilizeEncoders();
-  third_motor.initializePWM();
   attachInterrupt(third_motor.getEncoderA(), ISR__ENCODER_JOINT3, FALLING);
   
   

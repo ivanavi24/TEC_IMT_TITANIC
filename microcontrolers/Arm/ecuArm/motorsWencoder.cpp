@@ -66,14 +66,11 @@ void DCmotor_Encoder::setVelocityGains(float kpV, float kdV, float kiV){
 
 void DCmotor_Encoder::move2position(float deltaTime){
       float joint_error = joint_desired - joint_current;
-      Serial.printf("Joint error %f \n",joint_error);
       float joint_error_d = joint_error / deltaTime;
       joint_error_i += joint_error * deltaTime;
       float joint_control= kp * joint_error + kd * joint_error_d + ki * joint_error_i;
-      Serial.printf("Delta %f \n",deltaTime);
-      Serial.printf("Joint error control %f \n",joint_control);
       moveDirection();
-      moveMotor(satureControl(joint_control));
+      moveMotor(satureControl(abs(joint_control)));
 }
 float DCmotor_Encoder::getMotorRPM(){
   return float(avg_vel_pps_current) / float(encoder_resolution) * SECONDS_IN_MINUTES;
@@ -95,7 +92,7 @@ void DCmotor_Encoder::moveWVelocity(float deltaTime){
       moveMotor(satureControl(joint_control_v));
 }
 void DCmotor_Encoder::moveMotor(int duty_cycle){
-      ledcWrite(0, duty_cycle);
+      ledcWrite(pwm_channel, duty_cycle);
     }
 void DCmotor_Encoder:: moveDirectionVelocity(){
       if ( joint_velocity_desired > 0){
@@ -133,13 +130,10 @@ void DCmotor_Encoder::stopMovement(){
       digitalWrite(negative_dir_pin,LOW);
     }
 int DCmotor_Encoder::satureControl(float control_action){
-    Serial.printf("The control action received %f\n",control_action);
       if ( float(control_action) > max_actuator_signal){
         return max_actuator_signal;
-        Serial.printf("Satured positive\n");
       }
       if ( float(control_action) < min_actuator_signal){
-        Serial.printf("Satured negative\n");
         return min_actuator_signal;
       }
       return int(control_action);
