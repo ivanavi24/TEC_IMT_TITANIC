@@ -67,7 +67,8 @@ class Step_motor{
     
     void setJointDesiredFromAngle( float desired_angle);
     void setReferencePoint(unsigned char value);
-    
+
+    float getMotorFrequency();
     
 };
 

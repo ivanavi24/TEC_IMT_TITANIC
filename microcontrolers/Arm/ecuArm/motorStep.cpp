@@ -121,3 +121,6 @@ int Step_motor::getDesiredJointVal(){
   return joint_desired;
 }
 
+float Step_motor::getMotorFrequency(){
+  return 0;
+}

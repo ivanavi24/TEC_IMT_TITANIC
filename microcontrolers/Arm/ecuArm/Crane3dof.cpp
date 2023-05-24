@@ -58,7 +58,7 @@ void Crane3dof::setTargetRPM(unsigned char index){
     second_motor.setVelocityDesiredRPM(velocity);
     break;
   case MOTOR3:
-    //third_motor.setVelocityDesiredRPM(velocity);
+    third_motor.setVelocityDesiredRPM(velocity);
     break;
   default:
     break;
@@ -153,9 +153,6 @@ void Crane3dof::updateMotors(unsigned char index){
   case MOTOR2:
     second_motor.updateCurrentJoint();
     break;
-  case MOTOR3:
-    third_motor.updateCurrentJoint(1);
-    break;
   default:
     break;
   }
@@ -203,9 +200,6 @@ void Crane3dof::adjustMotorGains(unsigned char index){
   case MOTOR2:
     second_motor.setPositionGains(kp,kd,ki);
     break;
-  case MOTOR3:
-    //third_motor.setPositionGains(kp,kd,ki);
-    break;
   default:
     break;
   }
@@ -214,13 +208,12 @@ void Crane3dof::adjustMotorGains(unsigned char index){
 void Crane3dof::displayEncodersFrequency(unsigned char index){
   Serial.printf("Motor 1 frequency: %f\n",first_motor.getMotorFrequency());
   Serial.printf("Motor 2 frequency: %f\n",first_motor.getMotorRPM());
-  //Serial.printf("Motor 3 frequency: %f\n",third_motor.getMotorFrequency());
+  Serial.printf("Motor 3 frequency: %f\n",third_motor.getMotorFrequency());
   Serial.println("");
 }
 void Crane3dof::printMotorGains(unsigned char index){
   first_motor.displayGainValues();
   second_motor.displayGainValues();
-  //third_motor.displayGainValues();
 }
 void Crane3dof::initializeVars(){
 
