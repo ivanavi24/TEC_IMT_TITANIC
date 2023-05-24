@@ -18,62 +18,36 @@ Arm movement preferable be within the HW limits*/
 #define JOINT3_LOW_LIMIT_SW                0   
 #define JOINT3_HIGH_LIMIT_SW               90  
 
-#define MIN_PWM_SIGNAL              0
-#define MAX_PWM_SIGNAL              0
-/*PID Control gains*/
-#define KP_3                            2
-#define KI_3                            7
-#define KD_3                            4
-#define KP_V_3                          1
-#define KD_V_3                          1
-#define KI_V_3                          1
-
 /*PINS Description*/
-#define POSITIVE_DIR_PIN_3                5
-#define NEGATIVE_DIR_PIN_3                5
-#define PWM_PIN_3           5
-#define ENCODER_A_3                     13
-#define ENCODER_B_3                     12
+#define IN1_PIN                                 5
+#define IN2_PIN                                 5
+#define IN3_PIN                                 5
+#define IN4_PIN                                 13
 #define LIMIT_SWITCH_H_PIN_3              9
 #define LIMIT_SWITCH_L_PIN_3              9
 
-/*PWM configuration*/
-#define PWM_CHANNEL_3                       0
-#define PWM_FREQUENCY_3                   5000
-#define PWM_RESOLUTION_3                    8
-
-
-#define AVG_VEL_NUM_PULSES_3                10
+/*Define maximum movement velocity in terms of time between steps*/
+#define MIN_MICROS_BETWEEN_STEPS_SIUU            870
+#define MAX_MICROS_BETWEEN_STEPS_SIUU            1500
 
 #define ZERO_POS_3                      1.57
 #define REVOLUTIONS_PER_METER_3              1  //should be one in the first joint since movement is revolute
 
-struct MotorEncoderParams joint3 = 
-{
-    ENCODER_A_3,
-    ENCODER_B_3,
-    POSITIVE_DIR_PIN_3,
-    NEGATIVE_DIR_PIN_3,
-    PWM_PIN_3,
+struct MotorStepParams joint3{
+    IN1_PIN,
+    IN2_PIN,
+    IN3_PIN,
+    IN4_PIN,
     LIMIT_SWITCH_H_PIN_3,
     LIMIT_SWITCH_L_PIN_3,
-    MIN_PWM_SIGNAL,
-    MAX_PWM_SIGNAL,
-    PWM_CHANNEL_3,
-    PWM_FREQUENCY_3,
-    PWM_RESOLUTION_3,
-    KP_3,
-    KD_3,
-    KI_3,
-    KP_V_3,
-    KD_V_3,
-    KI_V_3,
-    JOINT3_LOW_LIMIT_HW,        
-    JOINT3_HIGH_LIMIT_HW, 
-    JOINT3_LOW_LIMIT_SW,                  
-    JOINT3_HIGH_LIMIT_SW,
-    JOINT3_ENCODER_RESOLUTION,
-    AVG_VEL_NUM_PULSES_3  
+    MIN_MICROS_BETWEEN_STEPS_SIUU,
+    MAX_MICROS_BETWEEN_STEPS_SIUU,
+    JOINT3_LOW_LIMIT_HW,
+    JOINT3_HIGH_LIMIT_HW,
+    JOINT3_LOW_LIMIT_SW,
+    JOINT3_HIGH_LIMIT_HW,
+    JOINT3_ENCODER_RESOLUTION
+
 };
 
 #endif

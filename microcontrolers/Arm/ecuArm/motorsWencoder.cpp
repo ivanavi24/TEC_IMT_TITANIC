@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #define PI            3.1415926535
-DCmotor_Encoder::DCmotor_Encoder(MotorEncoderParams motorParams){
+DCmotor_Encoder::DCmotor_Encoder(MotorDCEncoderParams motorParams){
       
 
       joint_current=ZERO_VAL_INITIALIZER;

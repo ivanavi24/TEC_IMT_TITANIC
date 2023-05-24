@@ -1,7 +1,7 @@
 #include "i2cComm.h"
 #include "Crane3dof.h"
 #include "mode_configuration.h"
-#include "isr.h"
+//#include "isr.h"
 
 
 #define PID_INTERVAL 20

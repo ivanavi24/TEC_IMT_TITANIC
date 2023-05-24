@@ -7,7 +7,7 @@
 #define MOTOR_ENCODER_STRUCT
 
 typedef unsigned char PIN;
-struct MotorEncoderParams{
+struct MotorDCEncoderParams{
 
     /*Encoder*/
     PIN encoderA;
@@ -47,7 +47,32 @@ struct MotorEncoderParams{
 
     unsigned int average_pulses;
 };
+struct MotorStepParams{
 
+    /*INPUTS */
+    PIN IN1_PIN;
+    PIN IN2_PIN;
+    PIN IN3_PIN;
+    PIN IN4_PIN;
+    /*Limit switches*/
+    PIN limit_switch_high;
+    PIN limit_switch_low;
+    
+    /*Values for communication unwrappping*/
+    unsigned int min_micros_between_step;
+    unsigned int max_micros_between_step;
+
+    /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
+    float joint_low_limit_hw;
+    float joint_high_limit_hw;
+    
+    /*SW limits to restric movement within specified range*/
+    float joint_low_limit_sw;
+    float joint_high_limit_sw;
+
+    /*Encoder resolutions in pulses per revolution*/
+    unsigned int steps_per_revolution;
+};
 
 
 #endif

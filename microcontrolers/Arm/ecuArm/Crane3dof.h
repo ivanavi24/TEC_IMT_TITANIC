@@ -1,4 +1,5 @@
 #include "motorsWencoder.h"
+#include "motorStep.h"
 #ifndef CRANE3DOF_H
 #define CRANE3DOF_H
 class Crane3dof{
@@ -7,7 +8,7 @@ class Crane3dof{
     float origin2water;
     DCmotor_Encoder first_motor;
     DCmotor_Encoder second_motor;
-    DCmotor_Encoder third_motor;
+    Step_motor third_motor;
 
 
     float x_desired, y_desired, z_desired; /*Set thorugh i2c communication intereruption*/
@@ -23,7 +24,7 @@ class Crane3dof{
   /*Getters methods*/
   DCmotor_Encoder get_first_motor();
   DCmotor_Encoder get_second_motor();
-  DCmotor_Encoder get_third_motor();
+  Step_motor get_third_motor();
 
   /*Setter methods*/
   void setTargetRPM(unsigned char index);

@@ -49,7 +49,7 @@ Arm movement preferable be within the HW limits*/
 #define ZERO_POS_2                    1.57
 #define REVOLUTIONS_PER_METER_2              1  //should be one in the first joint since movement is revolute
 
-struct MotorEncoderParams joint2 = 
+struct MotorDCEncoderParams joint2 = 
 {
     ENCODER_A_2,
     ENCODER_B_2,

@@ -52,7 +52,7 @@ class DCmotor_Encoder{
     
   public:
     
-    DCmotor_Encoder(MotorEncoderParams motorParams);
+    DCmotor_Encoder(MotorDCEncoderParams motorParams);
     /*Getters*/
     float getMotorRPM();
     float getMotorFrequency();
