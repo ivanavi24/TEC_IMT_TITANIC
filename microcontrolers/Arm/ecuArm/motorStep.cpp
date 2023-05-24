@@ -81,8 +81,8 @@ void Step_motor::stopMovement(){
 int Step_motor::satureControl(float control_action){
 
 }
-void Step_motor::setJointDesired( int desired_pulses){
-      joint_desired  = desired_pulses*steps_per_revolution;
+void Step_motor::setJointDesired( float desired_revolutions){
+      joint_desired  = desired_revolutions*steps_per_revolution;
       joint_error_i= ZERO_VAL_INITIALIZER;
 }
 void Step_motor::setJointDesiredFromAngle( float desired_angle){

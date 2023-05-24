@@ -74,7 +74,7 @@ class DCmotor_Encoder{
     void stopMovement();
     
     int satureControl(float control_action);
-    void setJointDesired( int desired_pulses);
+    void setJointDesired(float desired_revolutions);
     void setVelocityDesiredRPM( float desired_velocity);
     void updateCurrentJoint();
     

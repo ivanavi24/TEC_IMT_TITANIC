@@ -80,7 +80,7 @@ void Crane3dof::setTargetAngle(unsigned char index){
     second_motor.setJointDesiredFromAngle(angle);
     break;
   case MOTOR3:
-    //third_motor.setJointDesiredFromAngle(angle);
+    third_motor.setJointDesiredFromAngle(angle);
     break;
   default:
     break;
@@ -126,9 +126,9 @@ void Crane3dof::reachPosition(float deltaTime){
 }
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
 void Crane3dof::setTargetJoints(){
-  int pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  [radians]/[radians] = revolutions */ 
-  int pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  [meters]*[rev/meter] = revolutions  */ 
-  int pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  [meters]*[rev/meter] = revolutions  */ 
+  float pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  [radians]/[radians] = revolutions */ 
+  float pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  [meters]*[rev/meter] = revolutions  */ 
+  float pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  [meters]*[rev/meter] = revolutions  */ 
   first_motor.setJointDesired(pulsesJoint1);
   second_motor.setJointDesired(pulsesJoint2);
   third_motor.setJointDesired(pulsesJoint3);

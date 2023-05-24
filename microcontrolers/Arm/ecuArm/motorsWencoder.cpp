@@ -138,8 +138,8 @@ int DCmotor_Encoder::satureControl(float control_action){
       }
       return int(control_action);
     }
-void DCmotor_Encoder::setJointDesired( int desired_pulses){
-      joint_desired  = desired_pulses*encoder_resolution;
+void DCmotor_Encoder::setJointDesired( float desired_revolutions){
+      joint_desired  = desired_revolutions*encoder_resolution;
       joint_error_i= ZERO_VAL_INITIALIZER;
 }
 void DCmotor_Encoder::setJointDesiredFromAngle( float desired_angle){
