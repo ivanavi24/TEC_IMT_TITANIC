@@ -67,7 +67,7 @@ void Crane3dof::setTargetRPM(unsigned char index){
 void Crane3dof::setTargetAngle(unsigned char index){
   float angle;
   Serial.printf("Desired Angle MOTOR%u [degrees]: ",index);      //Prompt User for input
-  while (Serial.available()==0)  {
+  while (Serial.available()==0) {
   }
   angle = Serial.parseFloat();
   Serial.print(angle);  

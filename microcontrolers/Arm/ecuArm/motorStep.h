@@ -17,7 +17,7 @@ class Step_motor{
     PIN limit_switch_high;
     PIN limit_switch_low;
 
-    PIN step_sequence[STEP_MOTOR_CHANNELS] = {phase1,phase3,phase2,phase4};
+    PIN step_sequence[STEP_MOTOR_CHANNELS] ;
     unsigned char current_pin;
     unsigned int min_micros_between_step;
     unsigned int max_micros_between_step;

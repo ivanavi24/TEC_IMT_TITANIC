@@ -25,6 +25,10 @@ Step_motor::Step_motor(MotorStepParams motorParams){
       joint_current=ZERO_VAL_INITIALIZER;
       joint_desired=ZERO_VAL_INITIALIZER;
       joint_error_i=ZERO_VAL_INITIALIZER;    
+      step_sequence[0]= phase1;
+      step_sequence[1]= phase3;
+      step_sequence[2]= phase2;
+      step_sequence[3]= phase4;
       My_timer = timerBegin(0, 80, true);
 }
 
@@ -43,22 +47,27 @@ float Step_motor::getMotorRPM(){
 void Step_motor::moveWVelocity(float deltaTime){
 }
 void Step_motor::moveMotor(){
-      
+    if(joint_current == joint_desired){
+      timerDetachInterrupt(My_timer);
+    }    
     for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++){
       digitalWrite(step_sequence[pin],LOW);
     }
     digitalWrite(step_sequence[current_pin],HIGH);
-    digitalWrite(step_sequence[(current_pin+1)%(STEP_MOTOR_CHANNELS)],HIGH);
-    current_pin = current_pin >= STEP_MOTOR_CHANNELS? 0: current_pin + 1;
+    current_pin++;
+    if(current_pin>3){
+      current_pin=0;
+    }
+    //digitalWrite(step_sequence[(current_pin+1)%(STEP_MOTOR_CHANNELS)],HIGH);
+    //current_pin = current_pin >= STEP_MOTOR_CHANNELS? 0: current_pin + 1;
+    
     if (joint_current<joint_desired){
       joint_current++;
     }
     else if (joint_current>joint_desired){
       joint_current--;
     }
-    if(joint_current == joint_desired){
-      timerDetachInterrupt(My_timer);
-    }    
+    
 }
 
 void Step_motor:: moveDirection(){
@@ -82,7 +91,7 @@ void Step_motor::negativeMovement(){
       step_sequence[3] = phase3;
 }
 void Step_motor::stopMovement(){
-   timerDetachInterrupt(My_timer);
+   //timerDetachInterrupt(My_timer);
     for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++){
       digitalWrite(step_sequence[pin],LOW);
     }
@@ -99,6 +108,7 @@ void Step_motor::setJointDesiredFromAngle( float desired_angle){
       joint_desired  = desired_angle/360*float(steps_per_revolution)*STEP_MOTOR_CHANNELS; //desired pulses
       joint_error_i= ZERO_VAL_INITIALIZER;
       moveDirection();
+      timerAlarmEnable(My_timer);
       timerAttachInterrupt(My_timer, &ISR__TIME_JOINT3, true);
 }
 void Step_motor::setVelocityDesiredRPM( float desired_velocity){
@@ -119,17 +129,17 @@ void Step_motor::setReferencePoint(unsigned char value){
 
 void Step_motor::initilizePINS(){
 
-  pinMode(phase1,INPUT);
-  pinMode(phase2,INPUT);
-  pinMode(phase3,INPUT);
-  pinMode(phase4,INPUT);
+  pinMode(phase1,OUTPUT);
+  pinMode(phase2,OUTPUT);
+  pinMode(phase3,OUTPUT);
+  pinMode(phase4,OUTPUT);
   pinMode(limit_switch_high,INPUT);
   pinMode(limit_switch_low,INPUT);
   joint_current=0;
   
   timerAttachInterrupt(My_timer, &ISR__TIME_JOINT3, true);
   timerAlarmWrite(My_timer, 1000000/30, true);  
-  timerAlarmEnable(My_timer);
+  //timerAlarmEnable(My_timer);
   
 }
 int Step_motor::getJointCurrentVal(){

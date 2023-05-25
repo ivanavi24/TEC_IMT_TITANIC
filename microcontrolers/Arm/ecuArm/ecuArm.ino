@@ -38,8 +38,8 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     titanicCrane.moveMotor(CURRENT_SELECTED_MOTOR,time_now-time_last);
     counter++;
     if(counter >= countTimes){
-      titanicCrane.stopMotorMovement(CURRENT_SELECTED_MOTOR);
       Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_third_motor().getJointCurrentVal(),titanicCrane.get_third_motor().getDesiredJointVal());
+      titanicCrane.stopMotorMovement(CURRENT_SELECTED_MOTOR);
       titanicCrane.setTargetAngle(CURRENT_SELECTED_MOTOR);
       counter=0;
       
