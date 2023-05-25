@@ -21,6 +21,7 @@ class Crane3dof{
   public:
   Crane3dof ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
+  
   /*Getters methods*/
   DCmotor_Encoder get_first_motor();
   DCmotor_Encoder get_second_motor();
@@ -34,20 +35,25 @@ class Crane3dof{
   void adjustMotorGains(unsigned char index);
   void printMotorGains(unsigned char index);
   void displayEncodersFrequency(unsigned char index);
+
+
   /*Inverse kinematic calculate */
   void inverse_kinematics(float x, float y, float z);
   void restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag);
+
+
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
   void setTargetJoints();
   void reachPosition(float deltaTime);
   void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
-
+  /*ISR intermedidate call to update correspondingMotion*/
   void updateMotors(unsigned char index);
-
   void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
   
-  
+  void moveMotor(unsigned char index,float deltaTime);
+  void stopMotorMovement(unsigned char index);
+  void stopAllMotors();
   
   
   void initializeVars();

@@ -1,3 +1,4 @@
+
 #include "i2cComm.h"
 #include "Crane3dof.h"
 #include "mode_configuration.h"
@@ -8,14 +9,15 @@
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
-int desiredPrintTime = 10000; //print every 5 seconds
+int desiredPrintTime = 5000; //print every 5 seconds
 int countTimes = desiredPrintTime/ PID_INTERVAL;
 int counter=0;
 Crane3dof titanicCrane;
 void setup() {
   
   i2c_setSlave();
-  titanicCrane.initializeVars();
+  //titanicCrane.initializeVars();
+  titanicCrane.get_third_motor().initilizePINS();
   Serial.begin(115200);
 
 }
@@ -33,19 +35,14 @@ void loop() {
 #elif (CURRENT_OPERATION_MODE==CALIBRATE_MOTORS_POS)
 if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     /*Control action*/  
-    titanicCrane.get_first_motor().move2position(time_now-time_last );
-    
-    
+    titanicCrane.moveMotor(CURRENT_SELECTED_MOTOR,time_now-time_last);
     counter++;
     if(counter >= countTimes){
-      Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_first_motor().getJointCurrentVal(),titanicCrane.get_first_motor().getDesiredJointVal());
-      titanicCrane.get_first_motor().stopMovement();
-      counter=0;
-      titanicCrane.adjustMotorGains(CURRENT_SELECTED_MOTOR);
+      titanicCrane.stopMotorMovement(CURRENT_SELECTED_MOTOR);
+      Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_third_motor().getJointCurrentVal(),titanicCrane.get_third_motor().getDesiredJointVal());
       titanicCrane.setTargetAngle(CURRENT_SELECTED_MOTOR);
+      counter=0;
       
-      
-      titanicCrane.get_first_motor().move2position(time_now - time_last);
       
     }
     time_last=millis();

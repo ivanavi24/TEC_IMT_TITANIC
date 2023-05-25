@@ -70,7 +70,8 @@ void Crane3dof::setTargetAngle(unsigned char index){
   while (Serial.available()==0)  {
   }
   angle = Serial.parseFloat();
-  Serial.println(angle);  
+  Serial.print(angle);  
+  Serial.println(" .");
   switch (index)
   {
   case MOTOR1:
@@ -121,7 +122,7 @@ void Crane3dof::reachPosition(float deltaTime){
   
   first_motor.move2position(deltaTime);
   second_motor.move2position(deltaTime);
-  third_motor.move2position(deltaTime);
+  third_motor.move2position();
   
 }
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
@@ -142,7 +143,7 @@ void Crane3dof::moveMotors(float pwm[], float minValue,float maxValue, int pwm_r
   second_motor.moveMotor(dCycle);
   dCycle = (pwm[2]-minValue)/(maxValue-minValue)*pow(2,pwm_resolution);
   Serial.printf("Pwm motor 2 es: %d \n",dCycle);
-  third_motor.moveMotor(dCycle); 
+  //third_motor.moveMotor(dCycle); 
 }
 void Crane3dof::updateMotors(unsigned char index){
   switch (index)
@@ -152,6 +153,9 @@ void Crane3dof::updateMotors(unsigned char index){
     break;
   case MOTOR2:
     second_motor.updateCurrentJoint();
+    break;
+  case MOTOR3:
+    third_motor.moveMotor();
     break;
   default:
     break;
@@ -231,4 +235,43 @@ void Crane3dof::initializeVars(){
   
   
 };
+
+void Crane3dof::moveMotor(unsigned char index, float deltaTime){
+  switch (index)
+  {
+  case MOTOR1:
+    first_motor.move2position(deltaTime);
+    break;
+  case MOTOR2:
+    second_motor.move2position(deltaTime);
+    break;
+  case MOTOR3:
+    break;
+  default:
+    break;
+  }
+}
+
+void Crane3dof::stopMotorMovement(unsigned char index){
+  switch (index)
+  {
+  case MOTOR1:
+    first_motor.stopMovement();
+    break;
+  case MOTOR2:
+    second_motor.stopMovement();
+    break;
+  case MOTOR3:
+    third_motor.stopMovement();
+    break;
+  default:
+    break;
+  }
+
+}
+void Crane3dof::stopAllMotors(){
+  first_motor.stopMovement();
+  second_motor.stopMovement();
+  third_motor.stopMovement();
+}
 

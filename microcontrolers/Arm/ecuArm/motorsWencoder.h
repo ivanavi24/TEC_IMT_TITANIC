@@ -1,4 +1,5 @@
 #include "joints_config.h"
+#include "Arduino.h"
 #ifndef MOTORSWENCODER_H
 #define MOTORSWENCODER_H
 

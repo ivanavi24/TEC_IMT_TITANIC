@@ -11,7 +11,7 @@
 #define MOTOR3                  3
 
 
-#define CURRENT_SELECTED_MOTOR      MOTOR1
+#define CURRENT_SELECTED_MOTOR      MOTOR3
 
 
 /*SELECT MODE FUNCTIONALITY*/

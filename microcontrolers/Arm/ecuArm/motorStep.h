@@ -1,6 +1,6 @@
 
-
 #include "joints_config.h"
+#include "Arduino.h"
 #define STEP_MOTOR_CHANNELS             4
 #ifndef MOTOR_STEP_H
 #define MOTOR_STEP_H
@@ -35,14 +35,19 @@ class Step_motor{
     unsigned int steps_per_revolution;
 
     float joint_velocity_desired_RPM;
-    int joint_current;
-    int joint_desired;
+    
+    
     float joint_error_i;    
+    hw_timer_t *My_timer = NULL;
+    int joint_desired;
+    int joint_current;
     
   public:
     
     Step_motor(MotorStepParams motorParams);
     /*Getters*/
+
+    void resetCurrentJoint();
     float getMotorRPM();
     int getJointCurrentVal();
     int getDesiredJointVal();
@@ -51,10 +56,10 @@ class Step_motor{
 
     void initilizePINS();
 
-    void move2position(float deltaTime);
+    void move2position();
     void  moveDirection();
     void moveWVelocity(float deltaTime);
-    void moveMotor(int duty_cycle);
+    void moveMotor();
 
     /*Refer to documentation https://www.sparkfun.com/datasheets/Robotics/L298_H_Bridge.pdf */
     void positiveMovement();
@@ -73,3 +78,4 @@ class Step_motor{
 };
 
 #endif
+
