@@ -181,7 +181,7 @@ void DCmotor_Encoder::updateCurrentJoint(){
   }
   
 }
-void DCmotor_Encoder::setReferencePoint(unsigned char value){
+void DCmotor_Encoder::setLimitSwitchReferencePoint(unsigned char value){
   if (value){
     joint_current = joint_high_limit_hw/(2*PI)*float(encoder_resolution);
   }

@@ -80,7 +80,7 @@ class DCmotor_Encoder{
     void updateCurrentJoint();
     
     void setJointDesiredFromAngle( float desired_angle);
-    void setReferencePoint(unsigned char value);
+    void setLimitSwitchReferencePoint(unsigned char value);
 
     void displayGainValues();
 

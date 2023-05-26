@@ -42,6 +42,9 @@ class Step_motor{
     bool timerAttached =false;
     int joint_desired;
     int joint_current;
+    bool positiveMovementFlag=false;
+    bool negativeMovementFlag=false;
+    bool reachFlag =false;
     
   public:
     
@@ -72,7 +75,7 @@ class Step_motor{
     void updateCurrentJoint(int value);
     
     void setJointDesiredFromAngle( float desired_angle);
-    void setReferencePoint(unsigned char value);
+    void setLimitSwitchReferencePoint(unsigned char value);
 
     float getMotorFrequency();
     

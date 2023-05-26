@@ -166,13 +166,13 @@ void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
   switch (index)
   {
   case 1:
-    first_motor.setReferencePoint(value);
+    first_motor.setLimitSwitchReferencePoint(value);
     break;
   case 2:
-    second_motor.setReferencePoint(value);
+    second_motor.setLimitSwitchReferencePoint(value);
     break;
   case 3:
-    //third_motor.setReferencePoint(value);
+    //third_motor.setLimitSwitchReferencePoint(value);
     break;
   default:
     break;

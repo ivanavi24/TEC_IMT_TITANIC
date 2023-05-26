@@ -5,8 +5,8 @@
 
 #define JOINT3_ZERO_POSITION            60.5
 
-/*Encoder resoluition in pulses per meter [pulses/m]*/
-#define JOINT3_ENCODER_RESOLUTION       50
+/*Encoder resoluition in STEPS per Revolution*/
+#define JOINT3_ENCODER_RESOLUTION       200
 
 /*Joint movement limit in terms of pulses 
 (Low limit is 0, since start rutine sets zero with limite switch)
