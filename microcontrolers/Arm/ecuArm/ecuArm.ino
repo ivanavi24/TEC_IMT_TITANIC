@@ -9,7 +9,7 @@
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
-int desiredPrintTime = 5000; //print every 5 seconds
+int desiredPrintTime = 10000; //print every 5 seconds
 int countTimes4DesiredTime = desiredPrintTime/ PID_INTERVAL;
 int interruptionCounter=0;
 Crane3dof titanicCrane;

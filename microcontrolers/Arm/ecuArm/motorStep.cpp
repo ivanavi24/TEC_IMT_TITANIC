@@ -1,5 +1,5 @@
 #include "motorStep.h"
-//#include "isr.h"
+#include "mode_configuration.h"
 #include "isr.h"    
 
 #define PI            3.1415926535
@@ -46,37 +46,50 @@ float Step_motor::getMotorRPM(){
 
 void Step_motor::moveWVelocity(float deltaTime){
 }
-void Step_motor::moveMotor(){ 
-  for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++){
-      digitalWrite(step_sequence[pin],LOW);
-      }
-  if((joint_current == joint_desired)&timerAttached){
-    //timerDetachInterrupt(My_timer);
-    reachFlag=true;
-    //timerAttached = false;
+void Step_motor::moveMotor(){
+  static  int sequence_counter =0;
+  for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++)
+  {
+    digitalWrite(step_sequence[pin],LOW);
   }
-  
+  digitalWrite(step_sequence[current_pin],HIGH);
+  digitalWrite(step_sequence[(current_pin+1)%(STEP_MOTOR_CHANNELS)],HIGH);
+  current_pin = current_pin >= (STEP_MOTOR_CHANNELS-1)? 0: current_pin + 1;  
   if (positiveMovementFlag){
     joint_current++;
   }
   else if (negativeMovementFlag){
     joint_current--;
   }
+  if(joint_current == joint_desired)
+  {
+    
+#if (!(CRANE_Z_AXIS_BEHAVIOR==CRANE_Z_AXIS_INTERMITENT))
+    stopMovement();
 
-  digitalWrite(step_sequence[current_pin],HIGH);
-  digitalWrite(step_sequence[(current_pin+1)%(STEP_MOTOR_CHANNELS)],HIGH);
-  current_pin = current_pin >= (STEP_MOTOR_CHANNELS-1)? 0: current_pin + 1;    
-  if(reachFlag){
-    if (current_pin==0){
-      if(positiveMovementFlag){
+#else
+  
+  reachFlag=true;  
+  
+
+#endif
+  }
+#if (CRANE_Z_AXIS_BEHAVIOR==CRANE_Z_AXIS_INTERMITENT)
+    if(reachFlag){
+    sequence_counter++;
+    if (sequence_counter >(Z_AXIS_STOP_STEPS*float(steps_per_revolution))){
+      if(negativeMovementFlag){
+        positiveMovement();
+      }
+      else if (positiveMovementFlag){
         negativeMovement();
       }
-      else if (negativeMovementFlag){
-        positiveMovement();
-
-      }
+      sequence_counter=0;
     }
   }
+
+#endif   
+  
     
 }
 
@@ -111,10 +124,13 @@ void Step_motor::stopMovement(){
       timerDetachInterrupt(My_timer);
       timerAttached = false;
    }   
-    for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++){
-      digitalWrite(step_sequence[pin],LOW);
-    }
-    digitalWrite(step_sequence[0],HIGH);
+  for (int pin=0; pin<STEP_MOTOR_CHANNELS;pin++){
+    digitalWrite(step_sequence[pin],LOW);
+  }
+#if (CRANE_Z_AXIS_BEHAVIOR==CRANE_Z_AXIS_LOCKED)
+  digitalWrite(step_sequence[0],HIGH);
+#endif
+    
 }
 int Step_motor::satureControl(float control_action){
 
@@ -159,7 +175,7 @@ void Step_motor::initilizePINS(){
   joint_current=0;
   
   timerAttachInterrupt(My_timer, &ISR__TIME_JOINT3, true);
-  timerAlarmWrite(My_timer, 1000000/1000, true);  
+  timerAlarmWrite(My_timer, 1600, true);  
   //timerAlarmEnable(My_timer);
   
 }
