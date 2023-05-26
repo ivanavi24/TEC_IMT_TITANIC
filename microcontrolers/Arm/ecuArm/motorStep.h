@@ -39,6 +39,7 @@ class Step_motor{
     
     float joint_error_i;    
     hw_timer_t *My_timer = NULL;
+    bool timerAttached =false;
     int joint_desired;
     int joint_current;
     

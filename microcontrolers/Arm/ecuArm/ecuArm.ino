@@ -10,8 +10,8 @@ uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
 int desiredPrintTime = 5000; //print every 5 seconds
-int countTimes = desiredPrintTime/ PID_INTERVAL;
-int counter=0;
+int countTimes4DesiredTime = desiredPrintTime/ PID_INTERVAL;
+int interruptionCounter=0;
 Crane3dof titanicCrane;
 void setup() {
   
@@ -36,12 +36,12 @@ void loop() {
 if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     /*Control action*/  
     titanicCrane.moveMotor(CURRENT_SELECTED_MOTOR,time_now-time_last);
-    counter++;
-    if(counter >= countTimes){
+    interruptionCounter++;
+    if(interruptionCounter >= countTimes4DesiredTime){
       Serial.printf("Current Joint: %i Desired Joint %i \n",titanicCrane.get_third_motor().getJointCurrentVal(),titanicCrane.get_third_motor().getDesiredJointVal());
       titanicCrane.stopMotorMovement(CURRENT_SELECTED_MOTOR);
       titanicCrane.setTargetAngle(CURRENT_SELECTED_MOTOR);
-      counter=0;
+      interruptionCounter=0;
       
       
     }
