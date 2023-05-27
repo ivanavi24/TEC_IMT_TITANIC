@@ -27,9 +27,7 @@ class Crane3dof{
   DCmotor_Encoder get_second_motor();
   Step_motor get_third_motor();
 
-  /*Setter methods*/
-  void setTargetRPM(unsigned char index);
-  void setTargetAngle(unsigned char index);
+  
 
 
   void adjustMotorGains(unsigned char index);
@@ -51,6 +49,10 @@ class Crane3dof{
   void jointExtremePosition(unsigned char index,unsigned char value);
   // Auxiliary testing methods
   
+
+  /*Individual Motor movements*/
+  void setTargetRPM(unsigned char index);
+  void setTargetAngle(unsigned char index);
   void moveMotor(unsigned char index,float deltaTime);
   void stopMotorMovement(unsigned char index);
   void stopAllMotors();

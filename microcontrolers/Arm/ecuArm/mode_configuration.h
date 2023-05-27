@@ -26,7 +26,7 @@
 #define CRANE_Z_AXIS_INTERMITENT                2
 #define CRANE_Z_AXIS_LOCKED                     3
 
-#define CRANE_Z_AXIS_BEHAVIOR                   CRANE_Z_AXIS_INTERMITENT
+#define CRANE_Z_AXIS_BEHAVIOR                   CRANE_Z_AXIS_LOCKED
 
 #if (CRANE_Z_AXIS_BEHAVIOR==CRANE_Z_AXIS_INTERMITENT)
 /*Step in terms of revolutions of the step motor */

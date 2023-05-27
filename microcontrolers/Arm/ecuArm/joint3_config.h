@@ -27,8 +27,9 @@ Arm movement preferable be within the HW limits*/
 #define LIMIT_SWITCH_L_PIN_3              9
 
 /*Define maximum movement velocity in terms of time between steps*/
-#define MIN_MICROS_BETWEEN_STEPS_SIUU            870
-#define MAX_MICROS_BETWEEN_STEPS_SIUU            1500
+#define MIN_MICROS_BETWEEN_STEPS                 870
+#define MAX_MICROS_BETWEEN_STEPS                 1500
+#define NOMRAL_MICROS_BEWTEEN_STEPS
 
 #define ZERO_POS_3                      1.57
 #define REVOLUTIONS_PER_METER_3              1  //should be one in the first joint since movement is revolute
@@ -40,8 +41,8 @@ struct MotorStepParams joint3{
     IN4_PIN,
     LIMIT_SWITCH_H_PIN_3,
     LIMIT_SWITCH_L_PIN_3,
-    MIN_MICROS_BETWEEN_STEPS_SIUU,
-    MAX_MICROS_BETWEEN_STEPS_SIUU,
+    MIN_MICROS_BETWEEN_STEPS,
+    MAX_MICROS_BETWEEN_STEPS,
     JOINT3_LOW_LIMIT_HW,
     JOINT3_HIGH_LIMIT_HW,
     JOINT3_LOW_LIMIT_SW,
