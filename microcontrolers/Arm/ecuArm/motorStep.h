@@ -56,6 +56,7 @@ class Step_motor{
     int getJointCurrentVal();
     int getDesiredJointVal();
     void setJointDesired( float desired_revolutions);
+    void setJointDesiredFromAngle( float desired_angle);
     void setVelocityDesiredRPM( float desired_velocity);
 
     void initilizePINS();
@@ -74,7 +75,7 @@ class Step_motor{
     
     void updateCurrentJoint(int value);
     
-    void setJointDesiredFromAngle( float desired_angle);
+    
     void setLimitSwitchReferencePoint(unsigned char value);
 
     float getMotorFrequency();

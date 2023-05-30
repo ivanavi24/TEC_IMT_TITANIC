@@ -46,9 +46,11 @@ class DCmotor_Encoder{
     float  joint_velocity_error_i;
     
     double avg_vel_pps_current;
-    
-    
 
+    bool positive_movement;
+    
+    bool zero_velocity_flag=true;
+    hw_timer_t *My_timer = NULL;
     
     
   public:
@@ -80,12 +82,15 @@ class DCmotor_Encoder{
     void updateCurrentJoint();
     
     void setJointDesiredFromAngle( float desired_angle);
-    void setLimitSwitchReferencePoint(unsigned char value);
+    void setLimitSwitchReferencePoint(float revolutions);
 
     void displayGainValues();
 
     void initializePWM();
     void initilizeEncoders();
+
+    void zeroVelocityCase();
+    float getVelocityDesired();
     
     
 };

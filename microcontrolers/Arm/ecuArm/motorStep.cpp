@@ -136,8 +136,13 @@ int Step_motor::satureControl(float control_action){
 
 }
 void Step_motor::setJointDesired( float desired_revolutions){
-      joint_desired  = int(desired_revolutions);//desired_revolutions*float(steps_per_revolution)*STEP_MOTOR_CHANNELS;
+      joint_desired  = float(desired_revolutions)*float(steps_per_revolution);//desired_revolutions*float(steps_per_revolution)*STEP_MOTOR_CHANNELS;
       joint_error_i= ZERO_VAL_INITIALIZER;
+      moveDirection();
+      timerAlarmEnable(My_timer);
+      timerAttachInterrupt(My_timer, &ISR__TIME_JOINT3, true);
+      timerAttached = true;
+      reachFlag=false;
 }
 void Step_motor::setJointDesiredFromAngle( float desired_angle){
       joint_desired  = desired_angle/360*float(steps_per_revolution); //desired pulses

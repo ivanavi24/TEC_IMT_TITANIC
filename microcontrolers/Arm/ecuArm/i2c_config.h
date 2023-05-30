@@ -1,7 +1,12 @@
 
 
-#define START_COMMAND                       0x55 /* binary ->  0101 0101*/
-#define END_COMMAND                         0xAA /* binary ->  1010 1010*/
+#define START_COMMAND_WORLD_POS                       0x55 /* binary ->  0101 0101*/
+#define END_COMMAND_WORLD_POS                         0xAA /* binary ->  1010 1010*/
+
+
+#define START_COMMAND_LIMIT_SWITCHES                   0x55 /* binary ->  0101 0101*/
+#define END_COMMAND__LIMIT_SWITCHES                         0xAA /* binary ->  1010 1010*/
+
 
 
 #define BIT_SIZE_FORMAT                     0x0F

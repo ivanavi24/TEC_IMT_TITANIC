@@ -30,14 +30,15 @@ class Crane3dof{
   
 
 
-  void adjustMotorGains(unsigned char index);
+  void adjustMotorGains(unsigned char index,bool velocityGains);
   void printMotorGains(unsigned char index);
   void displayEncodersFrequency(unsigned char index);
 
 
   /*Inverse kinematic calculate */
-  void inverse_kinematics(float x, float y, float z);
-  void restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag);
+  void set_target_position(float x, float y, float z);
+  bool inverse_kinematics(float x, float y, float z);
+  bool restrict2Workspace(float thetaW, float radiusW, float zW);
 
 
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
@@ -46,7 +47,7 @@ class Crane3dof{
   void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
   /*ISR intermedidate call to update correspondingMotion*/
   void updateMotors(unsigned char index);
-  void jointExtremePosition(unsigned char index,unsigned char value);
+
   // Auxiliary testing methods
   
 
@@ -54,10 +55,16 @@ class Crane3dof{
   void setTargetRPM(unsigned char index);
   void setTargetAngle(unsigned char index);
   void moveMotor(unsigned char index,float deltaTime);
+  void moveMotorVel(unsigned char index, float deltaTime);
+  void moveAllMotors(float deltaTime);
   void stopMotorMovement(unsigned char index);
   void stopAllMotors();
   
+  /*Limit Switches ISR Handler*/
+  void motorsLimitSwitchesHandler(unsigned char index, unsigned char value);
   
+  
+  void setZeroVelocityMotors(unsigned char index); 
   void initializeVars();
 };
 

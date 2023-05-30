@@ -33,7 +33,7 @@ Arm movement preferable be within the HW limits*/
 
 #define ZERO_POS_3                      1.57
 #define REVOLUTIONS_PER_METER_3              1  //should be one in the first joint since movement is revolute
-
+#define INIT_POS_HALF_LINE                  0.2
 struct MotorStepParams joint3{
     IN1_PIN,
     IN2_PIN,

@@ -89,7 +89,7 @@ void Crane3dof::setTargetAngle(unsigned char index){
 }
 
 /*Assumes corrdinate frame located in the center of the robotic arm*/
-void Crane3dof::inverse_kinematics(float x, float y, float z){
+bool Crane3dof::inverse_kinematics(float x, float y, float z){
   float thetaWorld =atan2(x,y);
   float radiusWorld =sqrt(pow(x,2)+pow(y,2));
   float z_world= z + origin2water; 
@@ -101,21 +101,62 @@ void Crane3dof::inverse_kinematics(float x, float y, float z){
       thetaWorld += PI;
     }
     //some flag here
-    restrict2Workspace(thetaWorld, radiusWorld, z_world, 1);
+    radiusWorld = -radiusWorld ;
+
+  }  
+  if (restrict2Workspace(thetaWorld, radiusWorld, z_world))
+  {
+    theta = thetaWorld;
+    radius = radiusWorld;
+    z_height = z_world;
+#if (SERIAL_PRINT_CONTROL_ESP32)
+    Serial.printf("IK Coords set to theta:%f  radius:%f height:%f \n", theta,radius,z_height);
+#endif
+    return true; 
   }
-  restrict2Workspace(thetaWorld, radiusWorld, z_world, 0);
+#if (SERIAL_PRINT_CONTROL_ESP32)
+    Serial.printf("Given coordinates were out of Cranes workspace \n");
+#endif
+  return false;
 }
-void Crane3dof::restrict2Workspace(float thetaW, float radiusW, float zW,bool craneMecanismFlag){
+bool Crane3dof::restrict2Workspace(float thetaW, float radiusW, float zW){
   bool radiusFlag = false;
   bool thetaFlag = false;
   if( (radiusW>RADIUS_MIN) && (radiusW<RADIUS_MAX)){radiusFlag = true;}
   if( (thetaW>THETA_MIN) && (thetaW<THETA_MAX)){radiusFlag = true;}
   if (radiusFlag && thetaFlag){
-    theta = thetaW;
-    radius = radiusW;
-    z_height = zW;
-
+    return true;
   }
+  return false;
+}
+void Crane3dof::set_target_position(float x, float y, float z){
+#if (SERIAL_PRINT_CONTROL_ESP32)
+  float xD,yD,zD; 
+  Serial.printf("Target x[m]: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  xD = Serial.parseFloat();
+  Serial.printf("%f\n",xD);
+  Serial.printf("Target y[m]: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  yD = Serial.parseFloat();  
+  Serial.printf("%f\n",yD);
+  Serial.printf("Target z[m]: ");      //Prompt User for input
+  while (Serial.available()==0)  {
+  }
+  zD = Serial.parseFloat();
+  Serial.printf("%f\n",zD);
+  if(inverse_kinematics(x,y,z))
+  {
+    setTargetJoints();
+  } 
+#else
+  if(inverse_kinematics(x,y,z))
+  {
+    setTargetJoints();
+  } 
+#endif
   
 }
 void Crane3dof::reachPosition(float deltaTime){
@@ -128,7 +169,7 @@ void Crane3dof::reachPosition(float deltaTime){
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
 void Crane3dof::setTargetJoints(){
   float pulsesJoint1 =(theta - ZERO_POS_1)/ (2* PI);   /*  [radians]/[radians] = revolutions */ 
-  float pulsesJoint2 =(radius - ZERO_POS_2)*REVOLUTIONS_PER_METER_2;   /*  [meters]*[rev/meter] = revolutions  */ 
+  float pulsesJoint2 =(radius - ZERO_POS_2+INIT_POS_HALF_LINE)*REVOLUTIONS_PER_METER_2;   /*  [meters]*[rev/meter] = revolutions  */ 
   float pulsesJoint3 =(z_height - ZERO_POS_3)*REVOLUTIONS_PER_METER_3;   /*  [meters]*[rev/meter] = revolutions  */ 
   first_motor.setJointDesired(pulsesJoint1);
   second_motor.setJointDesired(pulsesJoint2);
@@ -162,56 +203,61 @@ void Crane3dof::updateMotors(unsigned char index){
   }
   
 }
-void Crane3dof::jointExtremePosition(unsigned char index,unsigned char value){
-  switch (index)
-  {
-  case 1:
-    first_motor.setLimitSwitchReferencePoint(value);
-    break;
-  case 2:
-    second_motor.setLimitSwitchReferencePoint(value);
-    break;
-  case 3:
-    //third_motor.setLimitSwitchReferencePoint(value);
-    break;
-  default:
-    break;
-  }
-}
 
-void Crane3dof::adjustMotorGains(unsigned char index){
+void Crane3dof::adjustMotorGains(unsigned char index,bool velocityGains){
   float kp,kd,ki;
-  Serial.printf("Motor%u kp: ",index);      //Prompt User for input
+  char gainsLetter ='P"';
+  if (velocityGains){
+    gainsLetter = 'V';
+  }
+  Serial.printf("Motor%u kp %u: ",index,gainsLetter);      //Prompt User for input
   while (Serial.available()==0)  {
   }
   kp = Serial.parseFloat();
   Serial.printf("%f\n",kp);
-  Serial.printf("Motor%u kd: ",index); 
+  Serial.printf("Motor%u kd %u: ",index,gainsLetter); 
   while (Serial.available()==0)  {
   }
   kd = Serial.parseFloat();  
   Serial.printf("%f\n",kd);
-  Serial.printf("Motor%u ki: ",index); 
+  Serial.printf("Motor%u ki %u: ",index,gainsLetter); 
   while (Serial.available()==0)  {
   }
   ki = Serial.parseFloat();
   Serial.printf("%f\n",ki);
-  switch (index)
-  {
-  case MOTOR1:
-    first_motor.setPositionGains(kp,kd,ki);
-    break;
-  case MOTOR2:
-    second_motor.setPositionGains(kp,kd,ki);
-    break;
-  default:
-    break;
+  if(!velocityGains){
+    switch (index)
+    {
+    case MOTOR1:
+      first_motor.setPositionGains(kp,kd,ki);
+      break;
+    case MOTOR2:
+      second_motor.setPositionGains(kp,kd,ki);
+      break;
+    default:
+      break;
+    }
+
   }
+  else{
+    switch (index)
+    {
+    case MOTOR1:
+      first_motor.setVelocityGains(kp,kd,ki);
+      break;
+    case MOTOR2:
+      second_motor.setVelocityGains(kp,kd,ki);
+      break;
+    default:
+      break;
+    }
+  }
+  
 
 }
 void Crane3dof::displayEncodersFrequency(unsigned char index){
   Serial.printf("Motor 1 frequency: %f\n",first_motor.getMotorFrequency());
-  Serial.printf("Motor 2 frequency: %f\n",first_motor.getMotorRPM());
+  Serial.printf("Motor 2 frequency: %f\n",second_motor.getMotorFrequency());
   Serial.printf("Motor 3 frequency: %f\n",third_motor.getMotorFrequency());
   Serial.println("");
 }
@@ -221,11 +267,11 @@ void Crane3dof::printMotorGains(unsigned char index){
 }
 void Crane3dof::initializeVars(){
 
-  first_motor.initilizeEncoders();
+  /*first_motor.initilizeEncoders();
   first_motor.initializePWM();
   first_motor.stopMovement();
   attachInterrupt(first_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
-
+  */
   second_motor.initilizeEncoders();
   second_motor.initializePWM();
   attachInterrupt(second_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
@@ -251,7 +297,25 @@ void Crane3dof::moveMotor(unsigned char index, float deltaTime){
     break;
   }
 }
-
+void Crane3dof::moveMotorVel(unsigned char index, float deltaTime){
+  switch (index)
+  {
+  case MOTOR1:
+    first_motor.moveWVelocity(deltaTime);
+    break;
+  case MOTOR2:
+    second_motor.moveWVelocity(deltaTime);
+    break;
+  case MOTOR3:
+    third_motor.moveWVelocity(deltaTime);
+  default:
+    break;
+  }
+}
+void Crane3dof::moveAllMotors(float deltaTime){
+  first_motor.move2position(deltaTime);
+  second_motor.move2position(deltaTime);
+}
 void Crane3dof::stopMotorMovement(unsigned char index){
   switch (index)
   {
@@ -263,6 +327,43 @@ void Crane3dof::stopMotorMovement(unsigned char index){
     break;
   case MOTOR3:
     third_motor.stopMovement();
+    break;
+  default:
+    break;
+  }
+
+}
+void Crane3dof::motorsLimitSwitchesHandler(unsigned char index, unsigned char value){
+  float lw_rev_reference;
+  switch (index)
+  {
+  case MOTOR1:
+    lw_rev_reference = (value*JOINT1_HIGH_LIMIT_HW + (1-value)*JOINT1_LOW_LIMIT_HW)/(2*PI);
+    first_motor.setLimitSwitchReferencePoint(lw_rev_reference );
+    break;
+  case MOTOR2:
+    lw_rev_reference = (value*JOINT2_HIGH_LIMIT_HW + (1-value)*JOINT2_LOW_LIMIT_HW)*REVOLUTIONS_PER_METER_2;
+    second_motor.setLimitSwitchReferencePoint(lw_rev_reference);
+    break;
+  case MOTOR3:
+    lw_rev_reference = (value*JOINT3_HIGH_LIMIT_HW + (1-value)*JOINT3_LOW_LIMIT_HW)*REVOLUTIONS_PER_METER_3;
+    third_motor.setLimitSwitchReferencePoint(lw_rev_reference);
+    break;
+  default:
+    break;
+  }
+}
+
+void Crane3dof::setZeroVelocityMotors(unsigned char index)
+{
+  switch (index)
+  {
+  case MOTOR1:
+    break;
+  case MOTOR2:
+    second_motor.zeroVelocityCase();
+    break;
+  case MOTOR3:
     break;
   default:
     break;

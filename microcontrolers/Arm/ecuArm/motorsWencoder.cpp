@@ -1,6 +1,7 @@
 #include "motorsWencoder.h"
 #include "Arduino.h"
 #include "isr.h"
+#include "mode_configuration.h"
 //#include "isr.h"
 
 
@@ -51,7 +52,7 @@ DCmotor_Encoder::DCmotor_Encoder(MotorDCEncoderParams motorParams){
       
       joint_error_i=0;
       
-      
+      My_timer = timerBegin(1, 80, true);
 }
 
 void DCmotor_Encoder::setPositionGains(float kpV, float kdV, float kiV){
@@ -86,11 +87,15 @@ PIN DCmotor_Encoder::getEncoderA(){
 }
 
 void DCmotor_Encoder::moveWVelocity(float deltaTime){
-      float joint_vel_error = getMotorRPM() - avg_vel_pps_current;
+      float joint_vel_error = joint_velocity_desired - getMotorRPM();
       float joint_v_error_d = joint_vel_error / deltaTime;
       joint_velocity_error_i += joint_vel_error * deltaTime;
       float joint_control_v= kp_v * joint_vel_error + kd_v * joint_v_error_d + ki_v * joint_velocity_error_i;
       moveDirectionVelocity();
+      Serial.printf("Deseado: %f  actual  %f\n",joint_velocity_desired, getMotorRPM());
+      //Serial.printf("El error es  %f\n",joint_vel_error);
+      //Serial.printf("La accion de control %f\n",joint_control_v);
+      Serial.printf("La accion de control final %i\n",satureControl(joint_control_v));
       moveMotor(satureControl(joint_control_v));
 }
 void DCmotor_Encoder::moveMotor(int duty_cycle){
@@ -122,11 +127,14 @@ void DCmotor_Encoder:: moveDirection(){
 void DCmotor_Encoder:: positiveMovement(){
       digitalWrite(negative_dir_pin,LOW);
       digitalWrite(positive_dir_pin,HIGH);
-    }
+      positive_movement = true;   
+}  
 void DCmotor_Encoder::negativeMovement(){
       digitalWrite(positive_dir_pin,LOW);
       digitalWrite(negative_dir_pin,HIGH);
-    }
+      positive_movement = false;
+}
+    
 void DCmotor_Encoder::stopMovement(){
       digitalWrite(positive_dir_pin,LOW);
       digitalWrite(negative_dir_pin,LOW);
@@ -150,13 +158,16 @@ void DCmotor_Encoder::setJointDesiredFromAngle( float desired_angle){
 }
 void DCmotor_Encoder::setVelocityDesiredRPM( float desired_velocity){
       joint_velocity_desired  = desired_velocity;
-      joint_velocity_error_i= ZERO_VAL_INITIALIZER;
+      Serial.printf("La velocidad %f \n",joint_velocity_desired);
+      Serial.printf("Las ganacias son  KP:%f  KI:%f KV:%f \n",kp_v,ki_v,kd_v);
+      //joint_velocity_error_i= ZERO_VAL_INITIALIZER;
 }
 void DCmotor_Encoder::updateCurrentJoint(){
   static unsigned int pulseCounter = 0;
   static int pulseCounterDirection = 0;
   static long lastTime = 0;
   pulseCounter++;
+  #if (DC_MOTOR_2ENCODERS==MOD_ON)
   int channelB_state= digitalRead(encoderB);
   if (channelB_state)
   {
@@ -169,6 +180,23 @@ void DCmotor_Encoder::updateCurrentJoint(){
     joint_current--;
     pulseCounterDirection--;
   }
+
+  #else
+  if (positive_movement)
+  {
+    joint_current++;
+    pulseCounterDirection++;
+  }
+
+  else
+  {
+    joint_current--;
+    pulseCounterDirection--;
+  }
+
+
+  #endif
+  
   
   if(pulseCounter>=average_pulses)//(pulseCounter>=average_pulses
   {
@@ -178,17 +206,12 @@ void DCmotor_Encoder::updateCurrentJoint(){
     pulseCounter = 0;
     pulseCounterDirection = 0;
     lastTime = millis();
+    zero_velocity_flag = false;
   }
   
 }
-void DCmotor_Encoder::setLimitSwitchReferencePoint(unsigned char value){
-  if (value){
-    joint_current = joint_high_limit_hw/(2*PI)*float(encoder_resolution);
-  }
-  else if (!value){ /*Set joint current value to zero val*/
-    joint_current = ZERO_VAL_INITIALIZER;
-  }
-
+void DCmotor_Encoder::setLimitSwitchReferencePoint(float revolutions){
+  joint_current = revolutions*float(encoder_resolution);
 }
 
 
@@ -202,7 +225,12 @@ void DCmotor_Encoder:: initializePWM(){
 }
 void DCmotor_Encoder::initilizeEncoders(){
   pinMode(encoderA,INPUT);
-  pinMode(encoderB,INPUT);
+  timerAttachInterrupt(My_timer, &ISR__LOW_VELOCITY_JOINT2, true);
+  timerAlarmWrite(My_timer, 50000, true); 
+  timerAlarmEnable(My_timer); 
+#if (#if (DC_MOTOR_2ENCODERS==MOD_ON))
+    pinMode(encoderB,INPUT);
+#endif
   
 }
 void DCmotor_Encoder::displayGainValues(){
@@ -216,3 +244,18 @@ int DCmotor_Encoder::getDesiredJointVal(){
   return joint_desired;
 }
 
+void DCmotor_Encoder::zeroVelocityCase()
+{
+  if (zero_velocity_flag)
+  {
+
+    avg_vel_pps_current=0;
+  }
+  zero_velocity_flag = true;
+}
+
+
+float DCmotor_Encoder::getVelocityDesired()
+{
+  return joint_velocity_desired;
+}
