@@ -25,9 +25,9 @@ void i2c_onReceive(int len){
   {
   case START_COMMAND_WORLD_POS:
 
-    float xref=(float(readUint16data()))/(pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
-    float yref=(float(readUint16data()))/(pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
-    float zref=(float(readUint16data()))/ (pow(2,16)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
+    float xref=(float(readUint16data()))/(pow(2,BIT_LEN_POS_DATA)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
+    float yref=(float(readUint16data()))/(pow(2,BIT_LEN_POS_DATA)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
+    float zref=(float(readUint16data()))/ (pow(2,BIT_LEN_POS_DATA)-1)*(MAX_VALUE_CMD_1-MIN_VALUE_CMD_1)+MIN_VALUE_CMD_1;
     Serial.print(" X:  ");Serial.printf("%f",xref);Serial.print("  Y: ");Serial.printf("%f",yref);Serial.print(" Z: ");Serial.printf("%f\n",zref);
     float pwmArr[3]={xref,yref,zref};
     titanicCrane.moveMotors(pwmArr, MIN_VALUE_CMD_1,MAX_VALUE_CMD_1, BIT_SIZE_FORMAT);
@@ -35,7 +35,6 @@ void i2c_onReceive(int len){
     if(tempByte == END_COMMAND_WORLD_POS){
       Serial.println("Communication success");
     } 
-
     break;
   case START_COMMAND_LIMIT_SWITCHES:
     unsigned char limit_switches_au8[8]; 
@@ -44,6 +43,16 @@ void i2c_onReceive(int len){
       limit_switches_au8[limitSwitch] = (tempByte && (1<<limitSwitch))>>limitSwitch;  
     }
     if(tempByte == END_COMMAND__LIMIT_SWITCHES){
+      Serial.println("Communication success");
+    } 
+    break;
+  case START_COMMAND_LIMIT_SWITCHES:
+    unsigned char limit_switches_au8[8]; 
+    tempByte = Wire.read();  
+    for (int limitSwitch=0;limitSwitch<8;limitSwitch++){
+      limit_switches_au8[limitSwitch] = (tempByte && (1<<limitSwitch))>>limitSwitch;  
+    }
+    if(tempByte == END_COMMAND_LIMIT_SWITCHES){
       Serial.println("Communication success");
     } 
     break;
