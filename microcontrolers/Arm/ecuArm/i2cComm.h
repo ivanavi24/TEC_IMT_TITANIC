@@ -1,6 +1,4 @@
 
-#include "Crane3dof.h"
-extern Crane3dof titanicCrane;
 
 #ifndef I2CCOMM_H
 #define I2CCOMM_H

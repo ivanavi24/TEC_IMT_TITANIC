@@ -3,13 +3,18 @@
 #include "i2cComm.h"
 #include "Arduino.h"
 
+#include "Crane3dof.h"
+extern Crane3dof titanicCrane;
 
-
+unsigned int valor=90;
 void i2c_onRequest(){
   
-  /*Wire.print(i++);
-  Wire.print(" Packets.");
-  Serial.println("onRequest");*/
+  /*Wire.write(valor++);
+  Wire.write(valor++);
+  Wire.write(valor++);
+  Wire.write(valor++);
+  //Wire.print(" Packets.");*/
+  Serial.println("onRequest");
 }
 int readUint16data(){
   int bMSB=Wire.read();
@@ -36,27 +41,27 @@ void i2c_onReceive(int len){
       Serial.println("Communication success");
     } 
     break;
+  }
+
+    
   case START_COMMAND_LIMIT_SWITCHES:
+  {
     unsigned char limit_switches_au8[8]; 
-    tempByte = Wire.read();  
+    tempByte = Wire.read();
     for (int limitSwitch=0;limitSwitch<8;limitSwitch++){
-      limit_switches_au8[limitSwitch] = (tempByte && (1<<limitSwitch))>>limitSwitch;  
+      limit_switches_au8[limitSwitch] = (tempByte & (1<<limitSwitch))>>limitSwitch;  
+      Serial.printf("El valor del limitSwitch %i es %u\n",limitSwitch,limit_switches_au8[limitSwitch]);
     }
-    if(tempByte == END_COMMAND__LIMIT_SWITCHES){
-      Serial.println("Communication success");
-    } 
-    break;
-  case START_COMMAND_LIMIT_SWITCHES:
-    unsigned char limit_switches_au8[8]; 
-    tempByte = Wire.read();  
+    tempByte = Wire.read();
     for (int limitSwitch=0;limitSwitch<8;limitSwitch++){
       limit_switches_au8[limitSwitch] = (tempByte && (1<<limitSwitch))>>limitSwitch;  
     }
     if(tempByte == END_COMMAND_LIMIT_SWITCHES){
       Serial.println("Communication success");
     } 
-    break;
-  
+    break;  
+  }
+    
   default:
     break;
   }

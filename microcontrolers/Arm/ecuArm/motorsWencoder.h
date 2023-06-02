@@ -50,11 +50,13 @@ class DCmotor_Encoder{
     bool positive_movement;
     
     bool zero_velocity_flag=true;
+    float desired_joint_threshold;
+
     hw_timer_t *My_timer = NULL;
     
     
   public:
-    
+    bool reach_desired_joint = true;
     DCmotor_Encoder(MotorDCEncoderParams motorParams);
     /*Getters*/
     float getMotorRPM();

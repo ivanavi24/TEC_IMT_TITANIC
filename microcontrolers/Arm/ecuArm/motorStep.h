@@ -47,7 +47,7 @@ class Step_motor{
     bool reachFlag =false;
     
   public:
-    
+    bool reach_desired_joint = true;
     Step_motor(MotorStepParams motorParams);
     /*Getters*/
 

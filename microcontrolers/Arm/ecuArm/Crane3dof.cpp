@@ -315,6 +315,10 @@ void Crane3dof::moveMotorVel(unsigned char index, float deltaTime){
 void Crane3dof::moveAllMotors(float deltaTime){
   first_motor.move2position(deltaTime);
   second_motor.move2position(deltaTime);
+  if (first_motor.reach_desired_joint & second_motor.reach_desired_joint & third_motor.reach_desired_joint)
+  {
+    sequenceMachine.changeState();
+  }
 }
 void Crane3dof::stopMotorMovement(unsigned char index){
   switch (index)
@@ -376,3 +380,23 @@ void Crane3dof::stopAllMotors(){
   third_motor.stopMovement();
 }
 
+
+void Crane3dof::compareReferenceandCurrent(unsigned char index){
+
+  switch (index)
+  {
+  case MOTOR1:
+    Serial.printf("Current Joint: %i Desired Joint %i \n",first_motor.getJointCurrentVal(),first_motor.getDesiredJointVal());
+  case MOTOR2:
+    Serial.printf("Current Joint: %i Desired Joint %i \n",second_motor.getJointCurrentVal(),second_motor.getDesiredJointVal());
+    break;
+  case MOTOR3:
+    Serial.printf("Current Joint: %i Desired Joint %i \n",third_motor.getJointCurrentVal(),third_motor.getDesiredJointVal());
+  default:
+    break;
+  }
+}
+
+float Crane3dof::getXdesired(){return x_desired;}
+float Crane3dof::getYdesired(){return y_desired;};
+float Crane3dof::getZdesired(){return z_desired;};

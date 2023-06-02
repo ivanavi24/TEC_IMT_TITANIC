@@ -69,6 +69,13 @@ void DCmotor_Encoder::setVelocityGains(float kpV, float kdV, float kiV){
 
 void DCmotor_Encoder::move2position(float deltaTime){
       float joint_error = joint_desired - joint_current;
+      if(abs(joint_error)< desired_joint_threshold )
+      {
+        reach_desired_joint = true;
+      }
+      else{
+        reach_desired_joint = false;
+      }
       float joint_error_d = joint_error / deltaTime;
       joint_error_i += joint_error * deltaTime;
       float joint_control= kp * joint_error + kd * joint_error_d + ki * joint_error_i;
@@ -151,10 +158,12 @@ int DCmotor_Encoder::satureControl(float control_action){
 void DCmotor_Encoder::setJointDesired( float desired_revolutions){
       joint_desired  = desired_revolutions*encoder_resolution;
       joint_error_i= ZERO_VAL_INITIALIZER;
+      reach_desired_joint = false;
 }
 void DCmotor_Encoder::setJointDesiredFromAngle( float desired_angle){
       joint_desired  = desired_angle/360*encoder_resolution; //desired pulses
       joint_error_i= ZERO_VAL_INITIALIZER;
+      reach_desired_joint = false;
 }
 void DCmotor_Encoder::setVelocityDesiredRPM( float desired_velocity){
       joint_velocity_desired  = desired_velocity;

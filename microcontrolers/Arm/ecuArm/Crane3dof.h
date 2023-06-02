@@ -1,5 +1,12 @@
 #include "motorsWencoder.h"
 #include "motorStep.h"
+#include "stateMachine.h"
+
+
+
+extern stateMachine sequenceMachine;
+
+
 #ifndef CRANE3DOF_H
 #define CRANE3DOF_H
 class Crane3dof{
@@ -27,6 +34,9 @@ class Crane3dof{
   DCmotor_Encoder get_second_motor();
   Step_motor get_third_motor();
 
+  float getXdesired();
+  float getYdesired();
+  float getZdesired();
   
 
 
@@ -66,6 +76,7 @@ class Crane3dof{
   
   void setZeroVelocityMotors(unsigned char index); 
   void initializeVars();
+  void compareReferenceandCurrent(unsigned char index);
 };
 
 

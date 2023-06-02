@@ -19,10 +19,10 @@ Arm movement preferable be within the HW limits*/
 #define JOINT3_HIGH_LIMIT_SW               90  
 
 /*PINS Description*/
-#define IN1_PIN                                 19
-#define IN2_PIN                                 18
-#define IN3_PIN                                 17
-#define IN4_PIN                                 16
+#define IN1_PIN                                 32
+#define IN2_PIN                                 33
+#define IN3_PIN                                 25
+#define IN4_PIN                                 26
 #define LIMIT_SWITCH_H_PIN_3              9
 #define LIMIT_SWITCH_L_PIN_3              9
 
