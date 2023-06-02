@@ -1,6 +1,8 @@
 
+
 #include "i2cComm.h"
 #include "Crane3dof.h"
+#include "stateMachine.h"
 #include "mode_configuration.h"
 //#include "isr.h"
 
@@ -13,11 +15,12 @@ int desiredPrintTime = 10000; //print every 5 seconds
 int countTimes4DesiredTime = desiredPrintTime/ PID_INTERVAL;
 int userInterfaceCounter=0;
 Crane3dof titanicCrane;
+stateMachine sequenceMachine;
 void setup() {
   
-  //i2c_setSlave();
-  titanicCrane.initializeVars();
-  //titanicCrane.get_third_motor().initilizePINS();
+  i2c_setSlave();
+  //titanicCrane.initializeVars();
+  titanicCrane.get_third_motor().initilizePINS();
   Serial.begin(115200);
 
 }
