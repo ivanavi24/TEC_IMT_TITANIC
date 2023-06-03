@@ -4,6 +4,7 @@
 #include "joint3_config.h"
 #include "mode_configuration.h"
 #include "isr.h"
+#include "stateMachine.h"
 
 #include "Crane3dof.h"
 #include "math.h"
@@ -15,7 +16,6 @@
 #define RADIUS_MAX          0.5
 #define THETA_MIN          0.3
 #define THETA_MAX          0.5
-
 
 
 Crane3dof::Crane3dof ():first_motor(joint1),
@@ -317,7 +317,8 @@ void Crane3dof::moveAllMotors(float deltaTime){
   second_motor.move2position(deltaTime);
   if (first_motor.reach_desired_joint & second_motor.reach_desired_joint & third_motor.reach_desired_joint)
   {
-    sequenceMachine.changeState();
+    craneState new_state = sequenceMachine.determineNextState();
+    sequenceMachine.changeState(new_state);
   }
 }
 void Crane3dof::stopMotorMovement(unsigned char index){
@@ -338,6 +339,8 @@ void Crane3dof::stopMotorMovement(unsigned char index){
 
 }
 void Crane3dof::motorsLimitSwitchesHandler(unsigned char index, unsigned char value){
+  /* 1  - > high value reference point*/
+  /* 0  - > high value reference point*/
   float lw_rev_reference;
   switch (index)
   {
@@ -386,12 +389,12 @@ void Crane3dof::compareReferenceandCurrent(unsigned char index){
   switch (index)
   {
   case MOTOR1:
-    Serial.printf("Current Joint: %i Desired Joint %i \n",first_motor.getJointCurrentVal(),first_motor.getDesiredJointVal());
+    Serial.printf("%u Current Joint: %i Desired Joint %i \n",MOTOR1,first_motor.getJointCurrentVal(),first_motor.getDesiredJointVal());
   case MOTOR2:
-    Serial.printf("Current Joint: %i Desired Joint %i \n",second_motor.getJointCurrentVal(),second_motor.getDesiredJointVal());
+    Serial.printf("%u Current Joint: %i Desired Joint %i \n",MOTOR2,second_motor.getJointCurrentVal(),second_motor.getDesiredJointVal());
     break;
   case MOTOR3:
-    Serial.printf("Current Joint: %i Desired Joint %i \n",third_motor.getJointCurrentVal(),third_motor.getDesiredJointVal());
+    Serial.printf("%u Current Joint: %i Desired Joint %i \n",MOTOR3,third_motor.getJointCurrentVal(),third_motor.getDesiredJointVal());
   default:
     break;
   }

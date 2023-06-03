@@ -47,7 +47,7 @@ class DCmotor_Encoder{
     
     double avg_vel_pps_current;
 
-    bool positive_movement;
+    bool positive_movement=true;
     
     bool zero_velocity_flag=true;
     float desired_joint_threshold;

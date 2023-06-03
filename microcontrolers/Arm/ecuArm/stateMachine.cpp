@@ -9,60 +9,103 @@ stateMachine::stateMachine()
 }
 
 
-
-void stateMachine::changeState()
-{
+craneState stateMachine::determineNextState(){
     switch (currentState)
     {
     case sailing:
-        /* code */
+        /* Return same state since control aims to remain in same pos  */
+        return sailing;
         break;
-    case scaning:/*Scaning find something or time out, again to sailing*/
-        /* code */
+    case scaning:
+        /* Return same state since control aims to remain in same pos  */
+        return scaning;
+        break;    
+    case arm2target: 
+        return descend;
+        break;
+    case descend:
+        /*Descend arm to pos to hold*/
+        return holding;
+        break;
 
-        titanicCrane.set_target_position(
-            titanicCrane.getXdesired(),
-            titanicCrane.getYdesired(),
-            los_pos_hold
+    case holding:
+        return rising;
+        break;
+    case rising: /*Rising finished, now move to deposit*/
+        return arm2deposit;
+        break;
+    case arm2deposit:
+        return holdingoff;
+        break;
+    case holdingoff:
+        return scaning;
+        break;
+    default:
+        break;
+    }
+}
+void stateMachine::changeState(craneState desired_state)
+{
+    switch (desired_state)
+    {
+    case sailing:
+        /* Move arm to safe sailing position */
+        titanicCrane.stopAllMotors();
+        break;
+    case scaning:
+        /* Move arm to safe sailing position */
+        /* Move camera pan servo to scan */
+        titanicCrane.inverse_kinematics(
+            X_SAFE_POSITION_MOVEMENT,
+            Y_SAFE_POSITION_MOVEMENT,
+            Z_SAFE_POSITION_MOVEMENT
         );
         break;    
-    case arm2target: /*Close gripper action here*/
-        currentState = descending;
-        /*Action of the next state*/
-        titanicCrane.set_target_position(
+    case arm2target: 
+        /*Move arm to target pos set by I2C Interruption*/
+        titanicCrane.inverse_kinematics(
             titanicCrane.getXdesired(),
             titanicCrane.getYdesired(),
-            los_pos_hold
+            Z_SAFE_POS_UP
         );
         break;
-    case descending:
+    case descend:
+        /*Descend arm to pos to hold*/
+        titanicCrane.inverse_kinematics(
+            titanicCrane.getXdesired(),
+            titanicCrane.getYdesired(),
+            Z_SAFE_POS_DOWN
+        );
+        break;
         currentState = holding;
         /*Close gripper action here*/
         break;
 
     case holding:
         currentState = rising;
-        /*Action of the next state*/
-        titanicCrane.set_target_position(
-            titanicCrane.getXdesired(),
-            titanicCrane.getYdesired(),
-            safe_pos_upper
-        );
+        /*Close gripper with timer here*/
         break;
     case rising: /*Rising finished, now move to deposit*/
         currentState = arm2deposit;
         /*Action of the next state*/
-        titanicCrane.set_target_position(
-            X_POS_DEPOSIT,
-            X_POS_DEPOSIT,
-            safe_pos_upper
+        /*Descend arm to pos to hold*/
+        titanicCrane.inverse_kinematics(
+            titanicCrane.getXdesired(),
+            titanicCrane.getYdesired(),
+            Z_SAFE_POS_UP
         );
         break;
     case arm2deposit:
+        titanicCrane.inverse_kinematics(
+            X_POS_DEPOSIT,
+            Y_POS_DEPOSIT,
+            Z_SAFE_POS_UP
+        );
         currentState = holdingoff;
+        
         break;
     case holdingoff:
-        /* code */
+        /*Close gripper here*/
         break;
     default:
         break;
