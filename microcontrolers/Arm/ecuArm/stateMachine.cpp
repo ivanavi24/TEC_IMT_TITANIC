@@ -110,4 +110,11 @@ void stateMachine::changeState(craneState desired_state)
     default:
         break;
     }
+    currentState = desired_state;
 }
+
+
+craneState stateMachine::getCurrentState()
+{
+    return currentState;
+};

@@ -41,9 +41,10 @@ class stateMachine
     public:
     
     stateMachine();
-    
+    craneState getCurrentState();
     craneState determineNextState();
     void changeState(craneState desired_state);
+    
 
 };
 

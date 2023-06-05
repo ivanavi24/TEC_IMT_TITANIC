@@ -61,6 +61,7 @@ struct MotorStepParams{
     /*Values for communication unwrappping*/
     unsigned int min_micros_between_step;
     unsigned int max_micros_between_step;
+    unsigned int optimal_micros_between_step;
 
     /*Absolute HW limites defined by limit switches in terms of encoder pulses*/
     float joint_low_limit_hw;

@@ -24,6 +24,8 @@ class Crane3dof{
    /**/
     float theta,radius,z_height;
     
+    int camera_servo_pan_pos;
+    int camera_servo_tilt_pos;
 
   public:
   Crane3dof ();
@@ -77,6 +79,9 @@ class Crane3dof{
   void setZeroVelocityMotors(unsigned char index); 
   void initializeVars();
   void compareReferenceandCurrent(unsigned char index);
+  int getCameraServoPanPos();
+  int getCameraServoTiltPos();
+  int getCraneThetaPos();
 };
 
 

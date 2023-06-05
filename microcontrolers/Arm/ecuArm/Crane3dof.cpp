@@ -401,5 +401,21 @@ void Crane3dof::compareReferenceandCurrent(unsigned char index){
 }
 
 float Crane3dof::getXdesired(){return x_desired;}
-float Crane3dof::getYdesired(){return y_desired;};
-float Crane3dof::getZdesired(){return z_desired;};
+float Crane3dof::getYdesired(){return y_desired;}
+float Crane3dof::getZdesired(){return z_desired;}
+
+
+
+int Crane3dof::getCameraServoPanPos()
+{
+  return camera_servo_pan_pos;
+}
+int Crane3dof::getCameraServoTiltPos()
+{
+  return camera_servo_tilt_pos;
+}
+
+int Crane3dof::getCraneThetaPos()
+{
+  return int(round(theta + PI/2))
+}

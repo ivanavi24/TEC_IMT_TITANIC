@@ -15,6 +15,7 @@ Step_motor::Step_motor(MotorStepParams motorParams){
 
       min_micros_between_step = motorParams.min_micros_between_step;
       max_micros_between_step = motorParams.max_micros_between_step;
+      optimal_micros_between_step = motorParams.optimal_micros_between_step;
    
       joint_low_limit_hw = motorParams.joint_low_limit_hw;
       joint_high_limit_hw =motorParams.joint_high_limit_hw;
@@ -180,7 +181,7 @@ void Step_motor::initilizePINS(){
   joint_current=0;
   
   timerAttachInterrupt(My_timer, &ISR__TIME_JOINT3, true);
-  timerAlarmWrite(My_timer, 1600, true);  
+  timerAlarmWrite(My_timer, optimal_micros_between_step, true);  
   //timerAlarmEnable(My_timer);
   
 }
