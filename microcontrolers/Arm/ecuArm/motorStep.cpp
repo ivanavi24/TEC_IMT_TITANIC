@@ -3,6 +3,7 @@
 #include "isr.h"    
 
 #define PI            3.1415926535
+#define stepMotorTimer        1
 Step_motor::Step_motor(MotorStepParams motorParams){
       
 
@@ -30,7 +31,7 @@ Step_motor::Step_motor(MotorStepParams motorParams){
       step_sequence[1]= phase3;
       step_sequence[2]= phase2;
       step_sequence[3]= phase4;
-      My_timer = timerBegin(0, 80, true);
+      My_timer = timerBegin(stepMotorTimer, 80, true);
 }
 
 
@@ -64,9 +65,10 @@ void Step_motor::moveMotor(){
   }
   if(joint_current == joint_desired)
   {
-    
+    reach_desired_joint = true;
 #if (!(CRANE_Z_AXIS_BEHAVIOR==CRANE_Z_AXIS_INTERMITENT))
     stopMovement();
+    
 
 #else
   

@@ -6,6 +6,9 @@ extern Crane3dof titanicCrane;
 
 #ifndef ISR_H
 #define ISR_H
+
+
+void IRAM_ATTR ISR__TIME_POSIITON();
 /*ISR calls to update motorsWencoder-> currenJoint value */
 void IRAM_ATTR ISR__ENCODER_JOINT1();
 void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT1();

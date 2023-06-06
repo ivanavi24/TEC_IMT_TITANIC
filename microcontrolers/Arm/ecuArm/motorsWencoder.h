@@ -54,7 +54,7 @@ class DCmotor_Encoder{
 
     hw_timer_t *My_timer = NULL;
     
-    
+    bool defectEncoderDcMotor = false;
   public:
     bool reach_desired_joint = true;
     DCmotor_Encoder(MotorDCEncoderParams motorParams);

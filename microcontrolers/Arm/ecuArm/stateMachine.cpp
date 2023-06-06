@@ -5,7 +5,7 @@
 extern Crane3dof titanicCrane;
 stateMachine::stateMachine()
 {
-    currentState = sailing;
+    currentState = scaning;
 }
 
 
@@ -76,17 +76,14 @@ void stateMachine::changeState(craneState desired_state)
             titanicCrane.getYdesired(),
             Z_SAFE_POS_DOWN
         );
-        break;
-        currentState = holding;
         /*Close gripper action here*/
         break;
 
     case holding:
-        currentState = rising;
         /*Close gripper with timer here*/
         break;
     case rising: /*Rising finished, now move to deposit*/
-        currentState = arm2deposit;
+        
         /*Action of the next state*/
         /*Descend arm to pos to hold*/
         titanicCrane.inverse_kinematics(
