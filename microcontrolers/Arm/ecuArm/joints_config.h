@@ -46,6 +46,7 @@ struct MotorDCEncoderParams{
     unsigned int encoder_resolution;
 
     unsigned int average_pulses;
+    bool defectEncoderDcMotor;
 };
 struct MotorStepParams{
 

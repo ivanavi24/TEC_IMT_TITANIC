@@ -49,7 +49,7 @@ DCmotor_Encoder::DCmotor_Encoder(MotorDCEncoderParams motorParams){
       encoder_resolution = motorParams.encoder_resolution;
       average_pulses = motorParams.average_pulses;
 
-      
+      defectEncoderDcMotor = motorParams.defectEncoderDcMotor;
       joint_error_i=0;
       
       My_timer = timerBegin(1, 80, true);
@@ -187,6 +187,10 @@ void DCmotor_Encoder::updateCurrentJoint(){
   else
   {
     joint_current--;
+    if(defectEncoderDcMotor)
+    {
+      joint_current--;
+    }
     pulseCounterDirection--;
   }
 

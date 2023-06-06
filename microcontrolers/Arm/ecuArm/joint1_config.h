@@ -41,8 +41,9 @@ Arm movement preferable be within the HW limits*/
 /*PWM configuration*/
 #define PWM_CHANNEL_1                       0
 #define PWM_FREQUENCY_1                   5000
-#define PWM_RESOLUTION_1                    8
+#define PWM_RESOLUTION_1                    10
 
+#define JOINT1_DEFECT_ENCODER               false
 
 #define AVG_VEL_NUM_PULSES_1                50
 
@@ -75,7 +76,11 @@ struct MotorDCEncoderParams joint1 =
     JOINT1_LOW_LIMIT_SW,                  
     JOINT1_HIGH_LIMIT_SW ,
     JOINT1_ENCODER_RESOLUTION,
-    AVG_VEL_NUM_PULSES_1 
+    AVG_VEL_NUM_PULSES_1,
+    JOINT1_DEFECT_ENCODER,
+    
+    
+     
 };
 
 #endif
