@@ -29,6 +29,9 @@ third_motor(joint3){
   radius=0;
   z_height=0;
 
+  My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
+
+
 }
 /*Getter Methods*/
 DCmotor_Encoder Crane3dof::get_first_motor(){
@@ -159,11 +162,16 @@ void Crane3dof::set_target_position(float x, float y, float z){
 #endif
   
 }
-void Crane3dof::reachPosition(float deltaTime){
+void Crane3dof::reachPosition(){
   
-  first_motor.move2position(deltaTime);
-  second_motor.move2position(deltaTime);
+  first_motor.move2position(MAIN_ROUTINE_CONTROL_TIME);
+  second_motor.move2position(MAIN_ROUTINE_CONTROL_TIME);
   third_motor.move2position();
+  if (first_motor.reach_desired_joint & second_motor.reach_desired_joint & third_motor.reach_desired_joint)
+  {
+    craneState new_state = sequenceMachine.determineNextState();
+    sequenceMachine.changeState(new_state);
+  }
   
 }
 /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
@@ -275,9 +283,17 @@ void Crane3dof::initializeVars(){
   second_motor.initilizeEncoders();
   second_motor.initializePWM();
   attachInterrupt(second_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
+
+
+  ledcSetup(CAMERA_PWM_CHANNEL, CAMERA_PWM_FREQUENCY, CAMERA_PWM_RESOLUTION);
+  ledcAttachPin(4, CAMERA_PWM_CHANNEL);
   
   //third_motor.initilizeEncoders();
   //attachInterrupt(third_motor.getEncoderA(), ISR__ENCODER_JOINT3, FALLING);
+
+  timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
+  timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
+  timerAlarmEnable(My_timer);
   
   
 };
@@ -312,15 +328,7 @@ void Crane3dof::moveMotorVel(unsigned char index, float deltaTime){
     break;
   }
 }
-void Crane3dof::moveAllMotors(float deltaTime){
-  first_motor.move2position(deltaTime);
-  second_motor.move2position(deltaTime);
-  if (first_motor.reach_desired_joint & second_motor.reach_desired_joint & third_motor.reach_desired_joint)
-  {
-    craneState new_state = sequenceMachine.determineNextState();
-    sequenceMachine.changeState(new_state);
-  }
-}
+
 void Crane3dof::stopMotorMovement(unsigned char index){
   switch (index)
   {
@@ -406,16 +414,78 @@ float Crane3dof::getZdesired(){return z_desired;}
 
 
 
-int Crane3dof::getCameraServoPanPos()
+unsigned char Crane3dof::getCameraServoPanPos()
 {
   return camera_servo_pan_pos;
 }
-int Crane3dof::getCameraServoTiltPos()
+unsigned char Crane3dof::getCameraServoTiltPos()
 {
   return camera_servo_tilt_pos;
 }
 
 int Crane3dof::getCraneThetaPos()
 {
-  return int(round(theta + PI/2))
+  return int(round(theta + PI/2));
+}
+
+
+void Crane3dof::moveCamera(float angle)
+{
+  if ((angle<=180) & (angle >=0))
+  {
+    ledcWrite(CAMERA_PWM_CHANNEL, (angle/PI_DEGREES *(PI_PWM_DUTY_CYCLE-ZERO_PWM_DUTY_CYCLE)+ZERO_PWM_DUTY_CYCLE)*pow(2,CAMERA_PWM_RESOLUTION));
+    camera_servo_pan_pos = int(angle);
+    
+  }
+  
+  
+}
+
+
+void Crane3dof::craneMovement()
+{
+  reachPosition();
+  if (sequenceMachine.getCurrentState() == descend)
+  {
+    
+  }
+  if (sequenceMachine.getCurrentState() == scaning)
+  {
+    if(cameraSweepCounter < 360*50)
+    {
+      cameraSweepCounter++;
+      if (cameraSweepCounter%1 == 0)
+      {
+        if (camera_servo_pan_pos >= 180)
+        {
+          cameraChangeStep = -1;
+        }
+        else if (camera_servo_pan_pos <= 0)
+        {
+          cameraChangeStep = 1;
+        }
+        moveCamera(camera_servo_pan_pos + cameraChangeStep);
+      }
+    }
+    else
+    {
+      cameraSweepCounter= 0;
+      //sequenceMachine.changeState(sequenceMachine.determineNextState());
+      
+    }
+    
+  }
+  if (sequenceMachine.getCurrentState() == holding)
+  {
+
+  }
+  if (sequenceMachine.getCurrentState() == holdingoff)
+  {
+
+  }
+}
+
+void Crane3dof::resetcameraSweepCounter()
+{
+  cameraSweepCounter = 0;
 }

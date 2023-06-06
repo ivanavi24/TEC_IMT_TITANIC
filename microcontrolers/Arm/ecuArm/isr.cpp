@@ -2,6 +2,14 @@
 
 #define LIMIT_SWITCH_HIGH_VALUE         1
 #define LIMIT_SWITCH_LOW_VALUE          0
+
+void IRAM_ATTR ISR__TIME_POSIITON()
+{
+    titanicCrane.craneMovement();
+    
+}
+
+
 /*GPIO Interrupt to read encoder*/
 void IRAM_ATTR ISR__ENCODER_JOINT1(){
     titanicCrane.updateMotors(MOTOR1);

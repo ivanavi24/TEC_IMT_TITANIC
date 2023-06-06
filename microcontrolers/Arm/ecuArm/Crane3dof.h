@@ -5,7 +5,21 @@
 
 
 extern stateMachine sequenceMachine;
+#define CAMERA_PWM_CHANNEL      5
+#define CAMERA_PWM_FREQUENCY    50
+#define CAMERA_PWM_RESOLUTION   11
+#define ZERO_PWM_DUTY_CYCLE     0.021
+#define PI_PWM_DUTY_CYCLE       0.1250
+#define PI                      3.1415926535
+#define ZERO                    0
+#define PI_DEGREES              180
 
+#define MAIN_ROUTINE_TIMER        0
+
+#define MAIN_ROUTINE_CONTROL_TIME 20000
+
+//544 us 0
+//926 us 90 delta
 
 #ifndef CRANE3DOF_H
 #define CRANE3DOF_H
@@ -24,8 +38,14 @@ class Crane3dof{
    /**/
     float theta,radius,z_height;
     
-    int camera_servo_pan_pos;
-    int camera_servo_tilt_pos;
+    unsigned char camera_servo_pan_pos;
+    unsigned char camera_servo_tilt_pos;
+
+    hw_timer_t *My_timer = NULL;
+    bool timerAttached =false;
+    
+    int cameraSweepCounter=0;
+    int cameraChangeStep = 1;
 
   public:
   Crane3dof ();
@@ -55,12 +75,13 @@ class Crane3dof{
 
   /*Convert (X,Y,Z) coordinates into joint pulses and update desired values for each motor*/
   void setTargetJoints();
-  void reachPosition(float deltaTime);
+  void reachPosition();
   void moveMotors(float pwm[], float minValue,float maxValue, int pwm_resolution);
   /*ISR intermedidate call to update correspondingMotion*/
   void updateMotors(unsigned char index);
 
-  // Auxiliary testing methods
+
+  void moveCamera(float angle);
   
 
   /*Individual Motor movements*/
@@ -68,7 +89,6 @@ class Crane3dof{
   void setTargetAngle(unsigned char index);
   void moveMotor(unsigned char index,float deltaTime);
   void moveMotorVel(unsigned char index, float deltaTime);
-  void moveAllMotors(float deltaTime);
   void stopMotorMovement(unsigned char index);
   void stopAllMotors();
   
@@ -79,9 +99,14 @@ class Crane3dof{
   void setZeroVelocityMotors(unsigned char index); 
   void initializeVars();
   void compareReferenceandCurrent(unsigned char index);
-  int getCameraServoPanPos();
-  int getCameraServoTiltPos();
+  unsigned char getCameraServoPanPos();
+  unsigned char getCameraServoTiltPos();
   int getCraneThetaPos();
+
+  void craneMovement();
+
+
+  void resetcameraSweepCounter();
 };
 
 
