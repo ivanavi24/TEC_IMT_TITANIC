@@ -9,6 +9,7 @@
 
 
 #define PID_INTERVAL 20
+#define ULTRASONIC_TIME_PRINT 1000
 uint32_t i = 0;
 long time_now=millis();
 long time_last=millis();
@@ -16,14 +17,15 @@ int desiredPrintTime = 10000; //print every 5 seconds
 int countTimes4DesiredTime = desiredPrintTime/ PID_INTERVAL;
 int userInterfaceCounter=0;
 
-
+int counterBaby=0;
 boat rose;
 ultrasonicSensor soundSystem;
 stateMachine sequenceMachine;
 void setup() {
   
   i2c_setSlave();
-  rose.initializeVars();
+  //rose.initializeVars();
+  soundSystem.initialize();
   //titanicCrane.get_third_motor().initilizePINS();
   Serial.begin(115200);
 
@@ -68,8 +70,12 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     /*Control action*/
     userInterfaceCounter++;
     soundSystem.updateDistances();
-    if(userInterfaceCounter >= countTimes4DesiredTime){
-      Serial.printf("Left : %d Center : %d Right : %d  \n",double(soundSystem.d_left),double(soundSystem.d_center),double(soundSystem.d_right));
+    if(userInterfaceCounter >=( ULTRASONIC_TIME_PRINT/PID_INTERVAL)){
+
+      Serial.print("Left ");Serial.println(soundSystem.d_left);
+      Serial.print("Center ");Serial.println(soundSystem.d_center);
+      Serial.print("Right ");Serial.println(soundSystem.d_right);
+      Serial.printf("Counter value %i\n",counterBaby);
       userInterfaceCounter=0;
     }
     

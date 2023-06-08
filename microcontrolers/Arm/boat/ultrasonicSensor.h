@@ -47,6 +47,8 @@ class ultrasonicSensor
     long d_right=0;
     int distance =0;
     ultrasonicSensor();
+    
+    void initialize();
 
     void triggerSignal();
 

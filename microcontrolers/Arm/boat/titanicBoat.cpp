@@ -23,7 +23,7 @@ boat::boat ():right_motor(joint_right),
 left_motor(joint_left){
 
 
-  My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
+  //My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
 
 
 }
@@ -214,8 +214,8 @@ void boat::initializeVars(){
   */
 
 
-  timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
-  timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
+ // timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
+  //timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
   //timerAlarmEnable(My_timer);
   
   

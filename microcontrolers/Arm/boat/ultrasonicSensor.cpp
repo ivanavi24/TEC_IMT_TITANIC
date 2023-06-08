@@ -7,10 +7,10 @@
 #define ULTR_SENSOR_LEFT    1
 #define ULTR_SENSOR_CENTER  2
 #define ULTR_SENSOR_RIGHT   3
-
+extern int counterBaby;
 ultrasonicSensor::ultrasonicSensor()
 {
-    trigSensorTimer = timerBegin(0, PRESCALER_2_MICROSECONDS, true);
+    trigSensorTimer = timerBegin(2, PRESCALER_2_MICROSECONDS, true);
 
     
     trigger_pin_left = ULTRA_TRIG_LEFT;
@@ -22,15 +22,18 @@ ultrasonicSensor::ultrasonicSensor()
     trigger_pin_right = ULTRA_TRIG_RIGHT;
     echo_pin_right = ULTRA_ECHO_RIGHT;
 
-    timerAlarmWrite(trigSensorTimer, 10, true);  
-    timerAlarmEnable(trigSensorTimer);
-    attachInterrupt(echo_pin_left, ISR__ECHO_ULTRASONIC_LEFT, CHANGE);
-    attachInterrupt(echo_pin_right, ISR__ECHO_ULTRASONIC_CENTER, CHANGE);
-    attachInterrupt(echo_pin_center, ISR__ECHO_ULTRASONIC_RIGHT, CHANGE);
+
+    
+
+
+    
+    
 
 }
 void ultrasonicSensor::triggerSignal()
 {
+    counterBaby++;
+
     if (trig_high_value){
       digitalWrite(trigger_pin_left,HIGH);
       digitalWrite(trigger_pin_right,HIGH);
@@ -40,9 +43,9 @@ void ultrasonicSensor::triggerSignal()
       trig_high_value= false;
     }
     else {
-      digitalWrite(trigger_pin_left,HIGH);
-      digitalWrite(trigger_pin_right,HIGH);
-      digitalWrite(trigger_pin_center,HIGH);
+      digitalWrite(trigger_pin_left,LOW);
+      digitalWrite(trigger_pin_right,LOW);
+      digitalWrite(trigger_pin_center,LOW);
       trig_high_value= true;
       timerDetachInterrupt(trigSensorTimer);
     
@@ -91,6 +94,24 @@ void ultrasonicSensor::updateSensorDistance(unsigned char sensor_selector)
     default:
         break;
     }
+}
+
+void ultrasonicSensor::initialize()
+{
+    pinMode(trigger_pin_left,OUTPUT);
+    pinMode(trigger_pin_center,OUTPUT);
+    pinMode(trigger_pin_right,OUTPUT);
+    pinMode(echo_pin_right,INPUT);
+    pinMode(echo_pin_left,INPUT);
+    pinMode(echo_pin_center,INPUT);
+
+   attachInterrupt(echo_pin_left, ISR__ECHO_ULTRASONIC_LEFT, CHANGE); 
+   //attachInterrupt(echo_pin_right, ISR__ECHO_ULTRASONIC_CENTER, CHANGE);
+    //attachInterrupt(echo_pin_center, ISR__ECHO_ULTRASONIC_RIGHT, CHANGE); 
+
+    timerAlarmWrite(trigSensorTimer, 10, true);
+   
+    timerAlarmEnable(trigSensorTimer);
 }
 
 
