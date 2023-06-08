@@ -17,6 +17,7 @@
 #define THETA_MAX          0.5
 
 extern ultrasonicSensor soundSystem;
+extern stateMachine sequenceMachine;
 
 boat::boat ():right_motor(joint_right),
 left_motor(joint_left){
@@ -211,13 +212,6 @@ void boat::initializeVars(){
   right_motor.stopMovement();
   attachInterrupt(right_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
   */
-  left_motor.initilizeEncoders();
-  left_motor.initializePWM();
-  attachInterrupt(left_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
-
-
-
-  
 
 
   timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);

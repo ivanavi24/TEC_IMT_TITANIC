@@ -55,7 +55,7 @@ class ultrasonicSensor
 
 
 
-}
+};
 
 
 #endif

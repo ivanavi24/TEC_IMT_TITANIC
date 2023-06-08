@@ -1,11 +1,11 @@
 #include "isr.h"
-#include "ultrasonicSensor.h"
+
 
 #define LIMIT_SWITCH_HIGH_VALUE         1
 #define LIMIT_SWITCH_LOW_VALUE          0
 
 
-extern ultrasonicSensor soundSystem;
+
 void IRAM_ATTR ISR__TIME_POSIITON()
 {
     
