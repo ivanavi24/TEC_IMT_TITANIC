@@ -19,7 +19,7 @@ Arm movement preferable be within the HW limits*/
 #define JOINT2_HIGH_LIMIT_SW               90  
 
 #define MIN_PWM_SIGNAL              0
-#define MAX_PWM_SIGNAL              4000
+#define MAX_PWM_SIGNAL              1023
 /*PID Control gains*/
 #define KP_2                          0
 #define KI_2                          9
@@ -32,14 +32,14 @@ Arm movement preferable be within the HW limits*/
 /*PINS Description*/
 #define POSITIVE_DIR_PIN_2              12
 #define NEGATIVE_DIR_PIN_2              13
-#define PWM_PIN_2         14
+#define PWM_PIN_2         18
 #define ENCODER_A_2                   34
 #define ENCODER_B_2                   35
 #define LIMIT_SWITCH_H_PIN_2            9
 #define LIMIT_SWITCH_L_PIN_2            9
 
 /*PWM configuration*/
-#define PWM_CHANNEL_2                     0
+#define PWM_CHANNEL_2                     3
 #define PWM_FREQUENCY_2                 5000
 #define PWM_RESOLUTION_2                  10
 

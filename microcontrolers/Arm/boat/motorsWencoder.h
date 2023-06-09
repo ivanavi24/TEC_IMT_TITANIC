@@ -15,8 +15,7 @@ class DCmotor_Encoder{
     PIN limit_switch_high;
     PIN limit_switch_low;
 
-    unsigned int min_actuator_signal;
-    unsigned int max_actuator_signal;
+    
 
     unsigned char pwm_channel;
     unsigned int pwm_frquency;
@@ -57,6 +56,9 @@ class DCmotor_Encoder{
     bool defectEncoderDcMotor = false;
   public:
     bool reach_desired_joint = true;
+    unsigned int min_actuator_signal;
+    unsigned int max_actuator_signal;
+    
     DCmotor_Encoder(MotorDCEncoderParams motorParams);
     /*Getters*/
     float getMotorRPM();

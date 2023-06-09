@@ -21,6 +21,7 @@
 enum craneState
 {
     sailing,
+    exploring,
     recolection
 };
 

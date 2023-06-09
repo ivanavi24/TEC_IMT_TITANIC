@@ -9,9 +9,19 @@ extern stateMachine sequenceMachine;
 unsigned int valor=90;
 void i2c_onRequest(){
   
-  /*Return servo pos*/
-  /*Return if esp32 is free to perform new sequence*/
+  /*Write LS values and current estate of boat*/
 
+
+  if ((sequenceMachine.getCurrentState()==sailing)|(sequenceMachine.getCurrentState()==exploring))
+  {
+     Wire.write(sailing);
+  }
+  else
+  {
+    Wire.write(recolection);
+  }
+ 
+  Wire.write(sequenceMachine.getCurrentState());
 
 }
 int readUint16data(){
@@ -26,60 +36,18 @@ void i2c_onReceive(int len){
   tempByte = Wire.read();
   switch (tempByte)
   {
-  case START_COMMAND_WORLD_POS:
+  case MOVE_BOAT_COMMAND:
   {
 
-    
+    tempByte = Wire.read();
     if(tempByte == END_COMMAND){
 
-      sequenceMachine.changeState(sailing);
-      Serial.println("Arm moving to target position");
+      sequenceMachine.changeState(exploring);
+      Serial.println("Exploring into new waters");
     } 
     break;
   }
 
-  case START_COMMAND_SAILING:
-  {
-    tempByte = Wire.read();
-    if(tempByte == END_COMMAND){
-      sequenceMachine.changeState(sailing);
-      Serial.println("Saling to avoid colitions");
-    } 
-    break;  
-  }
-  case START_COMMAND_SCANING:
-  {
-    tempByte = Wire.read();
-    if(tempByte == END_COMMAND){
-      sequenceMachine.changeState(sailing);
-      Serial.println("Starting scaning to serch for flowee");
-    } 
-    break;  
-  }
-
-
-  
-  case START_COMMAND_LIMIT_SWITCHES:
-  {
-    unsigned int motor =1;
-    unsigned int sumer = 0;
-    tempByte = Wire.read();
-    for (int limitSwitch=1;limitSwitch<7;limitSwitch++){
-      if((tempByte & (1<<limitSwitch))>>limitSwitch)
-      {
-        motor = motor + sumer;
-        Serial.printf("Motor %i  value: %i\n",motor,limitSwitch%2);
-        sumer = (limitSwitch+1) %2;
-        
-      }
-      //Serial.printf("El valor del limitSwitch %i es %u\n",limitSwitch,limit_switches_au8[limitSwitch]);
-    }
-    tempByte = Wire.read();
-    if(tempByte == END_COMMAND){
-      Serial.println("Limit Switch command receives succesfully");
-    } 
-    break;  
-  }
     
   default:
     break;

@@ -232,15 +232,17 @@ void DCmotor_Encoder:: initializePWM(){
   pinMode(pwm_pin,OUTPUT);
   pinMode(positive_dir_pin,OUTPUT);
   pinMode(negative_dir_pin,OUTPUT);
+  digitalWrite(positive_dir_pin,HIGH);
+  digitalWrite(negative_dir_pin,LOW);
   ledcSetup(pwm_channel, pwm_frquency, pwm_resolution);
   ledcAttachPin(pwm_pin, pwm_channel);
   
 }
 void DCmotor_Encoder::initilizeEncoders(){
   pinMode(encoderA,INPUT);
-  timerAttachInterrupt(My_timer, &ISR__LOW_VELOCITY_JOINT2, true);
+  /*timerAttachInterrupt(My_timer, &ISR__LOW_VELOCITY_JOINT2, true);
   timerAlarmWrite(My_timer, 50000, true); 
-  timerAlarmEnable(My_timer); 
+  timerAlarmEnable(My_timer); */
 #if (#if (DC_MOTOR_2ENCODERS==MOD_ON))
     pinMode(encoderB,INPUT);
 #endif

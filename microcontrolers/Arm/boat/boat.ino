@@ -24,7 +24,7 @@ stateMachine sequenceMachine;
 void setup() {
   
   i2c_setSlave();
-  //rose.initializeVars();
+  rose.initializeVars();
   soundSystem.initialize();
   //titanicCrane.get_third_motor().initilizePINS();
   Serial.begin(115200);
@@ -69,13 +69,14 @@ if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
 if(abs(time_now-time_last)>=PID_INTERVAL or (time_last > time_now)){
     /*Control action*/
     userInterfaceCounter++;
-    soundSystem.updateDistances();
+    
     if(userInterfaceCounter >=( ULTRASONIC_TIME_PRINT/PID_INTERVAL)){
-
-      Serial.print("Left ");Serial.println(soundSystem.d_left);
-      Serial.print("Center ");Serial.println(soundSystem.d_center);
-      Serial.print("Right ");Serial.println(soundSystem.d_right);
-      Serial.printf("Counter value %i\n",counterBaby);
+      Serial.print("Left ");Serial.print(soundSystem.d_left);
+      Serial.print(" Center ");Serial.print(soundSystem.d_center);
+      Serial.print(" Right ");Serial.println(soundSystem.d_right);
+      soundSystem.updateDistances();
+      rose.reactiveNavigation();
+      //Serial.printf("Counter value %i\n",counterBaby);
       userInterfaceCounter=0;
     }
     

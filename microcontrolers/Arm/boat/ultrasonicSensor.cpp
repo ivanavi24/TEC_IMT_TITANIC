@@ -7,10 +7,11 @@
 #define ULTR_SENSOR_LEFT    1
 #define ULTR_SENSOR_CENTER  2
 #define ULTR_SENSOR_RIGHT   3
-extern int counterBaby;
+#define   ULTR_TIMER        2
+extern int counterBaby; 
 ultrasonicSensor::ultrasonicSensor()
 {
-    trigSensorTimer = timerBegin(2, PRESCALER_2_MICROSECONDS, true);
+    trigSensorTimer = timerBegin(ULTR_TIMER, PRESCALER_2_MICROSECONDS, true);
 
     
     trigger_pin_left = ULTRA_TRIG_LEFT;
@@ -68,7 +69,9 @@ void ultrasonicSensor::updateSensorDistance(unsigned char sensor_selector)
         }
         else {
           t_left = micros()-t_last_left;
-          d_left = t_left/59;
+          if(t_left<12000)
+            d_left = t_left/59;
+          
         }
 
         break;
@@ -78,7 +81,9 @@ void ultrasonicSensor::updateSensorDistance(unsigned char sensor_selector)
         }
         else {
           t_center = micros()-t_last_center;
-          d_center = t_center/59;
+          if(t_center<12000)
+            d_center = t_center/59;
+          
         }
         break;
     case ULTR_SENSOR_RIGHT:
@@ -87,7 +92,8 @@ void ultrasonicSensor::updateSensorDistance(unsigned char sensor_selector)
         }
         else {
           t_right = micros()-t_last_right;
-          d_right = t_right/59;
+          if(t_right<12000)
+            d_right = t_right/59;
         }
 
         break;       
@@ -106,8 +112,8 @@ void ultrasonicSensor::initialize()
     pinMode(echo_pin_center,INPUT);
 
    attachInterrupt(echo_pin_left, ISR__ECHO_ULTRASONIC_LEFT, CHANGE); 
-   //attachInterrupt(echo_pin_right, ISR__ECHO_ULTRASONIC_CENTER, CHANGE);
-    //attachInterrupt(echo_pin_center, ISR__ECHO_ULTRASONIC_RIGHT, CHANGE); 
+   attachInterrupt(echo_pin_right, ISR__ECHO_ULTRASONIC_RIGHT, CHANGE);
+  attachInterrupt(echo_pin_center, ISR__ECHO_ULTRASONIC_CENTER, CHANGE); 
 
     timerAlarmWrite(trigSensorTimer, 10, true);
    

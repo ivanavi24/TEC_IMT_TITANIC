@@ -16,6 +16,22 @@
 #define THETA_MIN          0.3
 #define THETA_MAX          0.5
 
+
+#define OBJECT_RIGHT        (0.5 *100) //cm
+#define OBJECT_CENTER       (0.5 *100) //cm
+#define OBJECT_LEFT       (0.5 *100) //cm
+
+#define STRAIGHT_LINE_OBSTACLE    500
+
+#define STEER_SLOPE               10
+
+#define LS_J1_H                   34
+#define LS_J1_L                   35
+#define LS_J2_H                   36
+#define LS_J2_L                   39
+#define LS_J3_H                   39
+#define LS_J3_L                   39
+
 extern ultrasonicSensor soundSystem;
 extern stateMachine sequenceMachine;
 
@@ -24,6 +40,17 @@ left_motor(joint_left){
 
 
   //My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
+  LimitSwitch_j1_high =LS_J1_H;
+  LimitSwitch_j1_low = LS_J1_L;
+   
+  LimitSwitch_j2_high = LS_J2_H;
+  LimitSwitch_j2_low = LS_J2_L;
+
+  LimitSwitch_j3_high = LS_J3_H;
+  LimitSwitch_j3_low = LS_J3_L;
+
+  
+
 
 
 }
@@ -56,26 +83,7 @@ void boat::setTargetRPM(unsigned char index){
     break;
   } 
 }
-void boat::setTargetAngle(unsigned char index){
-  float angle;
-  Serial.printf("Desired Angle MOTOR%u [degrees]: ",index);      //Prompt User for input
-  while (Serial.available()==0) {
-  }
-  angle = Serial.parseFloat();
-  Serial.print(angle);  
-  Serial.println(" .");
-  switch (index)
-  {
-  case MOTOR1:
-    right_motor.setJointDesiredFromAngle(angle);
-    break;
-  case MOTOR2:
-    left_motor.setJointDesiredFromAngle(angle);
-    break;
-  default:
-    break;
-  }
-}
+
 
 void boat::set_target_position(float x, float y, float z){
 #if (SERIAL_PRINT_CONTROL_ESP32)
@@ -207,12 +215,26 @@ void boat::printMotorGains(unsigned char index){
 }
 void boat::initializeVars(){
 
-  /*right_motor.initilizeEncoders();
-  right_motor.initializePWM();
-  right_motor.stopMovement();
-  attachInterrupt(right_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
-  */
 
+
+  right_motor.initializePWM();
+
+  left_motor.initializePWM();
+
+
+  pinMode(LimitSwitch_j1_high,INPUT);
+  pinMode(LimitSwitch_j1_low,INPUT); 
+  pinMode(LimitSwitch_j2_high,INPUT);
+  pinMode(LimitSwitch_j2_low,INPUT); 
+  pinMode(LimitSwitch_j3_high,INPUT);
+  pinMode(LimitSwitch_j1_low,INPUT); 
+
+  attachInterrupt(LimitSwitch_j1_high, ISR__LIMIT_SWITCH_H_JOINT1, CHANGE);
+  attachInterrupt(LimitSwitch_j1_low, ISR__LIMIT_SWITCH_L_JOINT1, CHANGE);
+  attachInterrupt(LimitSwitch_j2_high, ISR__LIMIT_SWITCH_H_JOINT1, CHANGE);
+  attachInterrupt(LimitSwitch_j2_low, ISR__LIMIT_SWITCH_L_JOINT1, CHANGE);
+  attachInterrupt(LimitSwitch_j3_high, ISR__LIMIT_SWITCH_H_JOINT3, CHANGE);
+  attachInterrupt(LimitSwitch_j1_low, ISR__LIMIT_SWITCH_L_JOINT3, CHANGE);
 
  // timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
   //timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
@@ -307,6 +329,7 @@ void boat::compareReferenceandCurrent(unsigned char index){
 
 void boat::craneMovement()
 {
+  Serial.println("Reactive navigation");
   reachPosition();
   if (sequenceMachine.getCurrentState() == sailing)
   {
@@ -318,4 +341,45 @@ void boat::craneMovement()
     
   }
   
+}
+
+void boat::reactiveNavigation()
+{
+  bool objectRight = soundSystem.d_right < OBJECT_RIGHT;
+  bool objectCenter = soundSystem.d_center < OBJECT_CENTER;
+  bool objectLeft = soundSystem.d_left< OBJECT_LEFT ;
+  if(objectRight | objectLeft |  objectCenter)
+  {
+
+    Serial.println("Reactive navigation");
+    float steerLeft = 0;
+    float steerRight = 0;
+    long error_side = soundSystem.d_right-soundSystem.d_left; //more distance to the right so steer left motor
+
+    if(error_side>0)
+    {
+      steerLeft = STRAIGHT_LINE_OBSTACLE + abs(error_side)*STEER_SLOPE;    
+      steerRight = STRAIGHT_LINE_OBSTACLE - abs(error_side)*STEER_SLOPE;
+
+    }
+    else
+    {
+      steerLeft = STRAIGHT_LINE_OBSTACLE - abs(error_side)*STEER_SLOPE;    
+      steerRight = STRAIGHT_LINE_OBSTACLE + abs(error_side)*STEER_SLOPE;
+
+    }
+    Serial.printf("PWM Right  %i   PWM Left %i \n",left_motor.satureControl(steerLeft),right_motor.satureControl(steerRight));
+    left_motor.moveMotor(left_motor.satureControl(steerLeft));
+    right_motor.moveMotor(right_motor.satureControl(steerRight));
+    
+    
+  }
+  else
+  {
+    left_motor.moveMotor(STRAIGHT_LINE_OBSTACLE);
+    right_motor.moveMotor(STRAIGHT_LINE_OBSTACLE);
+    //stopAllMotors();
+  }
+  
+ 
 }

@@ -1,47 +1,11 @@
 #include "isr.h"
-
+#include "titanicBoat.h"
+#include "Arduino.h"
 
 #define LIMIT_SWITCH_HIGH_VALUE         1
 #define LIMIT_SWITCH_LOW_VALUE          0
 
-
-
-void IRAM_ATTR ISR__TIME_POSIITON()
-{
-    
-}
-
-
-/*GPIO Interrupt to read encoder*/
-void IRAM_ATTR ISR__ENCODER_JOINT1(){
-
-
-}
-/*Limit Switch Interruption for Joint1*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT1(){
-
-}
-/*Limit Switch Interruption for Joint1*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT1(){
-
-}
-
-/*GPIO Interrupt to read encoder*/
-void IRAM_ATTR ISR__ENCODER_JOINT2(){
-
-}
-/*Limit Switch Interruption for Joint2*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT2(){
-
-}
-/*Limit Switch Interruption for Joint2*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT2(){
-
-}
-
-void IRAM_ATTR ISR__LOW_VELOCITY_JOINT2(){
-
-}
+extern boat rose;
 
 /*Ultrasonic Sensors Interruptions*/
 void IRAM_ATTR ISR__TRIGG_ULTRASONIC()
@@ -64,11 +28,94 @@ void IRAM_ATTR ISR__ECHO_ULTRASONIC_RIGHT()
 
 
 
-/*Limit Switch Interruption for Joint3*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT3(){
+void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT1()
+{
+    unsigned char index = 1;
+    if (digitalRead(rose.LimitSwitch_j1_high))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
+   
 
 }
-/*Limit Switch Interruption for Joint3*/
-void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT3(){
+void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT1()
+{
+    unsigned char index = 2;
+    if (digitalRead(rose.LimitSwitch_j1_low))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
+}
+void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT2()
+{
+    unsigned char index = 3;
+    if (digitalRead(rose.LimitSwitch_j2_high))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
 
 }
+void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT2(){
+
+    unsigned char index = 4;
+    if (digitalRead(rose.LimitSwitch_j2_low))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
+
+
+}
+void IRAM_ATTR ISR__LIMIT_SWITCH_H_JOINT3()
+{
+    unsigned char index = 5;
+    if (digitalRead(rose.LimitSwitch_j2_low))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
+}
+void IRAM_ATTR ISR__LIMIT_SWITCH_L_JOINT3()
+{
+    unsigned char index = 6;
+    if (digitalRead(rose.LimitSwitch_j3_low))
+    {
+        rose.limitSwitches |= 1<< index;
+    }
+
+    else
+    {
+        rose.limitSwitches &= ~(1<< index);
+
+    }
+}
+
+

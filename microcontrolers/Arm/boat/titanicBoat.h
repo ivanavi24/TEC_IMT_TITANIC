@@ -28,10 +28,11 @@ class boat{
     DCmotor_Encoder right_motor;
     DCmotor_Encoder left_motor;
 
-    float x_desired, y_desired, z_desired; /*Set thorugh i2c communication intereruption*/
     
 
    /**/
+
+   
 
     hw_timer_t *My_timer = NULL;
     bool timerAttached =false;
@@ -40,15 +41,21 @@ class boat{
   public:
   boat ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
-  
+  unsigned char limitSwitches=0;
+  PIN LimitSwitch_j1_high;
+   PIN LimitSwitch_j1_low;
+   
+   PIN LimitSwitch_j2_high;
+   PIN LimitSwitch_j2_low;
+
+   PIN LimitSwitch_j3_high;
+   PIN LimitSwitch_j3_low;
   /*Getters methods*/
   DCmotor_Encoder get_right_motor();
   DCmotor_Encoder get_left_motor();
 
 
-  float getXdesired();
-  float getYdesired();
-  float getZdesired();
+
   
 
 
@@ -76,7 +83,7 @@ class boat{
 
   /*Individual Motor movements*/
   void setTargetRPM(unsigned char index);
-  void setTargetAngle(unsigned char index);
+
   void moveMotor(unsigned char index,float deltaTime);
   void moveMotorVel(unsigned char index, float deltaTime);
   void stopMotorMovement(unsigned char index);
@@ -93,7 +100,10 @@ class boat{
 
   void craneMovement();
 
-  void s();
+
+
+  
+  void reactiveNavigation();
 
 
 };

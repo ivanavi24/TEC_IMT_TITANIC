@@ -3,16 +3,17 @@
 #define MIN_VALUE_CMD_1                     -32.767
 #define BIT_LEN_POS_DATA                    16
 
-#define START_COMMAND_WORLD_POS                       0x55 /* binary ->  0101 0101*/
+
+
+#define I2C_DEV_ADDR                        0x56
+
+
+
+#define MOVE_BOAT_COMMAND                   0X54
 #define END_COMMAND                       0xAA /* binary ->  1010 1010*/
 
-#define START_COMMAND_LIMIT_SWITCHES                   0x54 /* binary ->  0101 0101*/
-#define START_COMMAND_SAILING                0x53 /* binary ->  0101 0101*/
-#define START_COMMAND_SCANING            0x51 /* binary ->  0101 0101*/
-
-
 #define BIT_SIZE_FORMAT                     0x0F
-#define I2C_DEV_ADDR                        0x55
+
 
 #define ARM_COMMAND_LENGTH                  0x08
 
