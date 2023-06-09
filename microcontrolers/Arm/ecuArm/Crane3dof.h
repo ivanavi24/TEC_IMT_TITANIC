@@ -5,6 +5,8 @@
 
 
 extern stateMachine sequenceMachine;
+
+#define CAMERA_PIN              13
 #define CAMERA_PWM_CHANNEL      5
 #define CAMERA_PWM_FREQUENCY    50
 #define CAMERA_PWM_RESOLUTION   11
@@ -47,6 +49,7 @@ class Crane3dof{
     int cameraSweepCounter=0;
     int cameraChangeStep = 1;
 
+
   public:
   Crane3dof ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
@@ -87,6 +90,7 @@ class Crane3dof{
   /*Individual Motor movements*/
   void setTargetRPM(unsigned char index);
   void setTargetAngle(unsigned char index);
+  void setTargetDisplacement(unsigned char index);
   void moveMotor(unsigned char index,float deltaTime);
   void moveMotorVel(unsigned char index, float deltaTime);
   void stopMotorMovement(unsigned char index);

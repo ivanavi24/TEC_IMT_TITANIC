@@ -47,6 +47,7 @@ struct MotorDCEncoderParams{
 
     unsigned int average_pulses;
     bool defectEncoderDcMotor;
+    float distanceRevoluteRelation;
 };
 struct MotorStepParams{
 
@@ -74,6 +75,8 @@ struct MotorStepParams{
 
     /*Encoder resolutions in pulses per revolution*/
     unsigned int steps_per_revolution;
+
+    float distanceRevoluteRelation;
 };
 
 

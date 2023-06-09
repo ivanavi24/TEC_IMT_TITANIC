@@ -52,6 +52,8 @@ class DCmotor_Encoder{
     bool zero_velocity_flag=true;
     float desired_joint_threshold;
 
+    float distanceRevoluteRelation=0;
+
     hw_timer_t *My_timer = NULL;
     
     bool defectEncoderDcMotor = false;
@@ -85,6 +87,7 @@ class DCmotor_Encoder{
     
     void setJointDesiredFromAngle( float desired_angle);
     void setLimitSwitchReferencePoint(float revolutions);
+    void setJointDesiredFromDisplacement(float displacement);
 
     void displayGainValues();
 

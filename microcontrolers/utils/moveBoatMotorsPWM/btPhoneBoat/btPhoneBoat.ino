@@ -1,13 +1,13 @@
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+.#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 #include "BluetoothSerial.h"
-#define PWM_LEFT  13
+#define PWM_LEFT  14
 #define DIR1_LEFT  27
-//#define DIR2_LEFT   14
+//#define DIR2_LEFT   26
 
-#define PWM_RIGHT       12
-#define DIR1_RIGHT      14
+#define PWM_RIGHT       13
+#define DIR1_RIGHT      12
 //#define DIR2_RIGHT      4
 
 // setting PWM properties
@@ -35,8 +35,8 @@ void setup(){
   ledcAttachPin(PWM_LEFT, ledChannel_left);
   ledcAttachPin(PWM_RIGHT, ledChannel_right);
   
-  //Serial.begin(115200);
-  SerialBT.begin("Titanic"); //Bluetooth device name
+  Serial.begin(115200);
+  SerialBT.begin("Titanic233"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
   digitalWrite(DIR1_LEFT,LOW);
   //digitalWrite(DIR2_LEFT,HIGH);
@@ -57,8 +57,8 @@ void loop(){
     Serial.printf ("cantidad: %u\n",SerialBT.available());
     unsigned char pwm_right_motor=SerialBT.read();
     unsigned char pwm_left_motor=SerialBT.read();
-    //Serial.printf("The pwm in right motor is %u \n",pwm_right_motor);
-    //Serial.printf("The pwm in left motor is %u \n",pwm_left_motor);
+    Serial.printf("The pwm in right motor is %u \n",pwm_right_motor);
+    Serial.printf("The pwm in left motor is %u \n",pwm_left_motor);
     ledcWrite(ledChannel_right, pwm_right_motor);
     ledcWrite(ledChannel_left, pwm_left_motor);
     

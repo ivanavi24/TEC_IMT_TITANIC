@@ -7,7 +7,9 @@
 #define CALIBRATE_MOTORS_POS               2
 #define DISPLAY_MOTORS_VEL                 3
 #define CALIBRATE_MOTORS_VEL               4
-#define REACH_GIVEN_POSITION_SERIAL        5   
+#define REACH_GIVEN_POSITION_SERIAL        5 
+#define MOVE_PAN_CAMERA                    6
+#define CALIBRATE_MOTORS_WITH_UNITS         7  
 
 
 
@@ -17,11 +19,11 @@
 
 
 
-#define CURRENT_SELECTED_MOTOR      MOTOR3
+#define CURRENT_SELECTED_MOTOR      MOTOR2
 
 
 /*SELECT MODE FUNCTIONALITY*/
-#define CURRENT_OPERATION_MODE  NORMAL_FUNCTION
+#define CURRENT_OPERATION_MODE  CALIBRATE_MOTORS_WITH_UNITS
 
 
 
@@ -42,7 +44,7 @@
 #define Z_AXIS_STOP_STEPS                              Z_AXIS_INTERMITENT_STEPS_LARGE
 #endif
 
-#define DC_MOTOR_2ENCODERS                            MOD_OFF
+#define DC_MOTOR_2ENCODERS                            MOD_ON
 
 
 #define SERIAL_PRINT_CONTROL_ESP32                      MOD_ON

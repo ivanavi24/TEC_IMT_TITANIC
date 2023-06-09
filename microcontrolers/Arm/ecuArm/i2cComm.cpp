@@ -11,6 +11,18 @@ unsigned int valor=90;
 void i2c_onRequest(){
   
   /*Return servo pos*/
+  /*Return if esp32 is free to perform new sequence*/
+  Serial.println("Data 1");
+
+  Wire.write(sequenceMachine.getCurrentState());
+  Serial.println("Data 1");
+  Wire.write(titanicCrane.getCameraServoPanPos());
+  Serial.println("Data 1");
+  Wire.write(titanicCrane.getCameraServoTiltPos());
+  Serial.println("Data 1");
+  Wire.write(titanicCrane.getCraneThetaPos());
+  Serial.println("Data 1");
+  //Wire.write(0x4);
 }
 int readUint16data(){
   int bMSB=Wire.read();

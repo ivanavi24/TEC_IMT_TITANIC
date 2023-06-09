@@ -29,7 +29,7 @@ third_motor(joint3){
   radius=0;
   z_height=0;
 
-  My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
+  //My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
 
 
 }
@@ -90,6 +90,31 @@ void Crane3dof::setTargetAngle(unsigned char index){
     break;
   }
 }
+
+void Crane3dof::setTargetDisplacement(unsigned char index){
+  float angle;
+  Serial.printf("Desired Displacement MOTOR%u [degrees or meters]: ",index);      //Prompt User for input
+  while (Serial.available()==0) {
+  }
+  angle = Serial.parseFloat();
+  Serial.print(angle);  
+  Serial.println(" .");
+  switch (index)
+  {
+  case MOTOR1:
+    first_motor.setJointDesiredFromDisplacement(angle);
+    break;
+  case MOTOR2:
+    second_motor.setJointDesiredFromDisplacement(angle);
+    break;
+  case MOTOR3:
+    third_motor.setJointDesiredFromDisplacement(angle);
+    break;
+  default:
+    break;
+  }
+}
+
 
 /*Assumes corrdinate frame located in the center of the robotic arm*/
 bool Crane3dof::inverse_kinematics(float x, float y, float z){
@@ -275,25 +300,26 @@ void Crane3dof::printMotorGains(unsigned char index){
 }
 void Crane3dof::initializeVars(){
 
-  /*first_motor.initilizeEncoders();
+  first_motor.initilizeEncoders();
   first_motor.initializePWM();
   first_motor.stopMovement();
   attachInterrupt(first_motor.getEncoderA(), ISR__ENCODER_JOINT1, FALLING);
-  */
+  
   second_motor.initilizeEncoders();
   second_motor.initializePWM();
   attachInterrupt(second_motor.getEncoderA(), ISR__ENCODER_JOINT2, FALLING);
-
+  
+  third_motor.initilizePINS();
 
   ledcSetup(CAMERA_PWM_CHANNEL, CAMERA_PWM_FREQUENCY, CAMERA_PWM_RESOLUTION);
-  ledcAttachPin(4, CAMERA_PWM_CHANNEL);
-  
+  ledcAttachPin(CAMERA_PIN, CAMERA_PWM_CHANNEL);
+  //third_motor.initilizePINS();
   //third_motor.initilizeEncoders();
   //attachInterrupt(third_motor.getEncoderA(), ISR__ENCODER_JOINT3, FALLING);
 
-  timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
-  timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
-  timerAlarmEnable(My_timer);
+  //timerAttachInterrupt(My_timer, &ISR__TIME_POSIITON, true);
+  //timerAlarmWrite(My_timer, MAIN_ROUTINE_CONTROL_TIME, true);  
+  //timerAlarmEnable(My_timer);
   
   
 };
@@ -308,6 +334,7 @@ void Crane3dof::moveMotor(unsigned char index, float deltaTime){
     second_motor.move2position(deltaTime);
     break;
   case MOTOR3:
+    third_motor.moveMotor();
     break;
   default:
     break;
@@ -442,6 +469,7 @@ void Crane3dof::moveCamera(float angle)
 }
 
 
+
 void Crane3dof::craneMovement()
 {
   reachPosition();
@@ -470,14 +498,35 @@ void Crane3dof::craneMovement()
     else
     {
       cameraSweepCounter= 0;
-      //sequenceMachine.changeState(sequenceMachine.determineNextState());
+      sequenceMachine.changeState(sequenceMachine.determineNextState());
       
     }
     
   }
   if (sequenceMachine.getCurrentState() == holding)
   {
-
+    if(cameraSweepCounter < 360*50)
+    {
+      cameraSweepCounter++;
+      if (cameraSweepCounter%1 == 0)
+      {
+        if (camera_servo_pan_pos >= 180)
+        {
+          cameraChangeStep = -1;
+        }
+        else if (camera_servo_pan_pos <= 0)
+        {
+          cameraChangeStep = 1;
+        }
+        moveCamera(camera_servo_pan_pos + cameraChangeStep);
+      }
+    }
+    else
+    {
+      cameraSweepCounter= 0;
+      //sequenceMachine.changeState(sequenceMachine.determineNextState());
+      
+    }
   }
   if (sequenceMachine.getCurrentState() == holdingoff)
   {

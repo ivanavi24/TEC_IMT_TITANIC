@@ -47,6 +47,7 @@ class Step_motor{
     bool negativeMovementFlag=false;
     bool reachFlag =false;
     
+    float distanceRevoluteRelation=0;
   public:
     bool reach_desired_joint = true;
     Step_motor(MotorStepParams motorParams);
@@ -80,6 +81,8 @@ class Step_motor{
     void setLimitSwitchReferencePoint(unsigned char value);
 
     float getMotorFrequency();
+
+    void setJointDesiredFromDisplacement(float displacement);
     
 };
 

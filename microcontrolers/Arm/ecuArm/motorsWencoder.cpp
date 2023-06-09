@@ -4,7 +4,7 @@
 #include "mode_configuration.h"
 //#include "isr.h"
 
-
+extern int pulseCounter;
 #define PI            3.1415926535
 DCmotor_Encoder::DCmotor_Encoder(MotorDCEncoderParams motorParams){
       
@@ -52,7 +52,8 @@ DCmotor_Encoder::DCmotor_Encoder(MotorDCEncoderParams motorParams){
       defectEncoderDcMotor = motorParams.defectEncoderDcMotor;
       joint_error_i=0;
       
-      My_timer = timerBegin(1, 80, true);
+      //My_timer = timerBegin(2, 80, true);
+      distanceRevoluteRelation = motorParams.distanceRevoluteRelation;
 }
 
 void DCmotor_Encoder::setPositionGains(float kpV, float kdV, float kiV){
@@ -172,7 +173,7 @@ void DCmotor_Encoder::setVelocityDesiredRPM( float desired_velocity){
       //joint_velocity_error_i= ZERO_VAL_INITIALIZER;
 }
 void DCmotor_Encoder::updateCurrentJoint(){
-  static unsigned int pulseCounter = 0;
+  //static unsigned int pulseCounter = 0;
   static int pulseCounterDirection = 0;
   static long lastTime = 0;
   pulseCounter++;
@@ -187,10 +188,10 @@ void DCmotor_Encoder::updateCurrentJoint(){
   else
   {
     joint_current--;
-    if(defectEncoderDcMotor)
+    /*if(defectEncoderDcMotor)
     {
       joint_current--;
-    }
+    }*/
     pulseCounterDirection--;
   }
 
@@ -210,7 +211,7 @@ void DCmotor_Encoder::updateCurrentJoint(){
 
   #endif
   
-  
+  /*
   if(pulseCounter>=average_pulses)//(pulseCounter>=average_pulses
   {
     long currentTime =millis();
@@ -221,7 +222,7 @@ void DCmotor_Encoder::updateCurrentJoint(){
     lastTime = millis();
     zero_velocity_flag = false;
   }
-  
+  */
 }
 void DCmotor_Encoder::setLimitSwitchReferencePoint(float revolutions){
   joint_current = revolutions*float(encoder_resolution);
@@ -238,11 +239,12 @@ void DCmotor_Encoder:: initializePWM(){
 }
 void DCmotor_Encoder::initilizeEncoders(){
   pinMode(encoderA,INPUT);
-  timerAttachInterrupt(My_timer, &ISR__LOW_VELOCITY_JOINT2, true);
-  timerAlarmWrite(My_timer, 50000, true); 
-  timerAlarmEnable(My_timer); 
-#if (#if (DC_MOTOR_2ENCODERS==MOD_ON))
-    pinMode(encoderB,INPUT);
+  //timerAttachInterrupt(My_timer, &ISR__LOW_VELOCITY_JOINT2, true);
+  //timerAlarmWrite(My_timer, 50000, true); 
+  //timerAlarmEnable(My_timer);
+  pinMode(encoderB,INPUT); 
+#if  (DC_MOTOR_2ENCODERS==MOD_ON)
+  pinMode(encoderB,INPUT);
 #endif
   
 }
@@ -271,4 +273,12 @@ void DCmotor_Encoder::zeroVelocityCase()
 float DCmotor_Encoder::getVelocityDesired()
 {
   return joint_velocity_desired;
+}
+
+void DCmotor_Encoder::setJointDesiredFromDisplacement(float displacement)
+{
+  joint_desired  = int(displacement *distanceRevoluteRelation); //[meters]*[pulses/meters]
+  joint_error_i= ZERO_VAL_INITIALIZER;
+  reach_desired_joint = false;
+
 }

@@ -6,7 +6,7 @@
 #define JOINT2_ZERO_POSITION            60.5
 
 /*Encoder resoluition in pulses per meter [pulses/m]*/
-#define JOINT2_ENCODER_RESOLUTION       920*18
+#define JOINT2_ENCODER_RESOLUTION       920
 
 /*Joint movement limit in terms of pulses 
 (Low limit is 0, since start rutine sets zero with limite switch)
@@ -30,13 +30,13 @@ Arm movement preferable be within the HW limits*/
 
 
 /*PINS Description*/
-#define POSITIVE_DIR_PIN_2              12
-#define NEGATIVE_DIR_PIN_2              13
-#define PWM_PIN_2         14
-#define ENCODER_A_2                   34
-#define ENCODER_B_2                   35
-#define LIMIT_SWITCH_H_PIN_2            9
-#define LIMIT_SWITCH_L_PIN_2            9
+#define POSITIVE_DIR_PIN_2                  4
+#define NEGATIVE_DIR_PIN_2                  17
+#define PWM_PIN_2                           16
+#define ENCODER_A_2                         36
+#define ENCODER_B_2                         39
+#define LIMIT_SWITCH_H_PIN_2                9
+#define LIMIT_SWITCH_L_PIN_2                9
 
 /*PWM configuration*/
 #define PWM_CHANNEL_2                     0
@@ -48,7 +48,8 @@ Arm movement preferable be within the HW limits*/
 #define AVG_VEL_NUM_PULSES_2                2
 
 #define ZERO_POS_2                    1.57
-#define REVOLUTIONS_PER_METER_2              1  //should be one in the first joint since movement is revolute
+//Pulses per meter
+#define REVOLUTIONS_PER_METER_2              (22.27*1000)  //should be one in the first joint since movement is revolute
 
 struct MotorDCEncoderParams joint2 = 
 {
@@ -76,7 +77,8 @@ struct MotorDCEncoderParams joint2 =
     JOINT2_HIGH_LIMIT_SW ,
     JOINT2_ENCODER_RESOLUTION,
     AVG_VEL_NUM_PULSES_2,
-    JOINT2_DEFECT_ENCODER
+    JOINT2_DEFECT_ENCODER,
+    REVOLUTIONS_PER_METER_2
     
 };
 
