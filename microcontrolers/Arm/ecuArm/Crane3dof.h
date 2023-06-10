@@ -6,6 +6,8 @@
 
 extern stateMachine sequenceMachine;
 
+
+#define CAMERA_UPDATE_TIME      20
 #define CAMERA_PIN              13
 #define CAMERA_PWM_CHANNEL      5
 #define CAMERA_PWM_FREQUENCY    50
@@ -22,6 +24,16 @@ extern stateMachine sequenceMachine;
 
 //544 us 0
 //926 us 90 delta
+#ifndef CAMERA_SERVO_STATES
+#define CAMERA_SERVO_STATES
+enum CameraServoStates 
+{
+  not_scanning,
+  scaning_towards,
+  scaning_in_target_point,
+  scaning_finished
+};
+#endif
 
 #ifndef CRANE3DOF_H
 #define CRANE3DOF_H
@@ -50,7 +62,17 @@ class Crane3dof{
     int cameraChangeStep = 1;
 
 
+    
+    
+    
+
+
   public:
+
+  /*Global so it can be ser to zero from an external event*/
+  int current_state_index_camera= 0; 
+  CameraServoStates cameraScanningState;
+
   Crane3dof ();
     /*Assumes corrdinate frame located in the center of the robotic arm*/
   
@@ -111,6 +133,8 @@ class Crane3dof{
 
 
   void resetcameraSweepCounter();
+
+  void scanSorroundings();
 };
 
 

@@ -18,7 +18,7 @@ craneState stateMachine::determineNextState(){
         break;
     case scaning:
         /* Return same state since control aims to remain in same pos  */
-        return scaning;
+        return sailing;
         break;    
     case arm2target: 
         return descend;
@@ -55,11 +55,12 @@ void stateMachine::changeState(craneState desired_state)
     case scaning:
         /* Move arm to safe sailing position */
         /* Move camera pan servo to scan */
-        titanicCrane.inverse_kinematics(
+        /*titanicCrane.inverse_kinematics(
             X_SAFE_POSITION_MOVEMENT,
             Y_SAFE_POSITION_MOVEMENT,
             Z_SAFE_POSITION_MOVEMENT
-        );
+        );*/
+        titanicCrane.stopAllMotors();
         break;    
     case arm2target: 
         /*Move arm to target pos set by I2C Interruption*/

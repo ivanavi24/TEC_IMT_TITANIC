@@ -41,6 +41,7 @@ void loop() {
     /*Control action*/  
     //titanicCrane.reachPosition(time_now-time_last);
     time_last=millis();
+    ti
 
   }
 #elif (CURRENT_OPERATION_MODE==CALIBRATE_MOTORS_POS)  

@@ -18,6 +18,7 @@
 #define THETA_MAX          0.5
 
 
+
 Crane3dof::Crane3dof ():first_motor(joint1),
 second_motor(joint2),
 third_motor(joint3){
@@ -30,7 +31,8 @@ third_motor(joint3){
   z_height=0;
 
   //My_timer = timerBegin(MAIN_ROUTINE_TIMER, 80, true);
-
+  current_state_index_camera= 0; 
+  cameraScanningState= not_scanning;
 
 }
 /*Getter Methods*/
@@ -192,8 +194,11 @@ void Crane3dof::reachPosition(){
   first_motor.move2position(MAIN_ROUTINE_CONTROL_TIME);
   second_motor.move2position(MAIN_ROUTINE_CONTROL_TIME);
   third_motor.move2position();
+
+  /*Change state if desired value was achieved*/
   if (first_motor.reach_desired_joint & second_motor.reach_desired_joint & third_motor.reach_desired_joint)
   {
+    stopAllMotors();
     craneState new_state = sequenceMachine.determineNextState();
     sequenceMachine.changeState(new_state);
   }
@@ -479,62 +484,76 @@ void Crane3dof::craneMovement()
   }
   if (sequenceMachine.getCurrentState() == scaning)
   {
-    if(cameraSweepCounter < 360*50)
+    if (cameraScanningState != scaning_in_target_point )
     {
-      cameraSweepCounter++;
-      if (cameraSweepCounter%1 == 0)
-      {
-        if (camera_servo_pan_pos >= 180)
-        {
-          cameraChangeStep = -1;
-        }
-        else if (camera_servo_pan_pos <= 0)
-        {
-          cameraChangeStep = 1;
-        }
-        moveCamera(camera_servo_pan_pos + cameraChangeStep);
-      }
-    }
-    else
-    {
-      cameraSweepCounter= 0;
-      sequenceMachine.changeState(sequenceMachine.determineNextState());
-      
+      scanSorroundings();
     }
     
   }
   if (sequenceMachine.getCurrentState() == holding)
   {
-    if(cameraSweepCounter < 360*50)
-    {
-      cameraSweepCounter++;
-      if (cameraSweepCounter%1 == 0)
-      {
-        if (camera_servo_pan_pos >= 180)
-        {
-          cameraChangeStep = -1;
-        }
-        else if (camera_servo_pan_pos <= 0)
-        {
-          cameraChangeStep = 1;
-        }
-        moveCamera(camera_servo_pan_pos + cameraChangeStep);
-      }
-    }
-    else
-    {
-      cameraSweepCounter= 0;
-      //sequenceMachine.changeState(sequenceMachine.determineNextState());
-      
-    }
-  }
-  if (sequenceMachine.getCurrentState() == holdingoff)
-  {
-
+   
   }
 }
-
 void Crane3dof::resetcameraSweepCounter()
 {
   cameraSweepCounter = 0;
+}
+
+void Crane3dof::scanSorroundings()
+{
+  const int scan_values [4] = {0, 90, 180, 90};
+  static int cameraChangeStep = 1;
+  static long last_time_camera = millis();
+  static long current_time_camera = millis();
+
+  static int desired_angle_value =0;
+
+
+  current_time_camera = millis();
+
+  /*Move servo gradually*/
+  if(abs(current_time_camera-last_time_camera)>=CAMERA_UPDATE_TIME or (last_time_camera > current_time_camera))
+  {
+      
+      if (camera_servo_pan_pos = desired_angle_value)
+      {
+          if (current_state_index_camera <=3)
+          {
+            /*Change goal if still in range*/
+            current_state_index_camera ++;
+            desired_angle_value =scan_values[current_state_index_camera];
+
+            if (camera_servo_pan_pos > desired_angle_value)
+            {
+              cameraChangeStep = -1;
+            }
+            else if (camera_servo_pan_pos <= 0)
+            {
+              cameraChangeStep = 1;
+            }
+            /*Once in value, must be reset*/
+            cameraScanningState = scaning_in_target_point;
+          }
+          else
+          {
+            current_state_index_camera = 0;
+            cameraScanningState = scaning_finished;
+            sequenceMachine.changeState(sequenceMachine.determineNextState());
+            
+          }
+      } 
+      else
+      {
+        /*Move camera to desired position and update value (done inside the function)*/
+        moveCamera(camera_servo_pan_pos + cameraChangeStep);
+      }
+      last_time_camera = millis();     
+  }
+
+
+
+  
+
+
 }

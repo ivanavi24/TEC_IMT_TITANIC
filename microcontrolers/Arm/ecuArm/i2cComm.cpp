@@ -14,14 +14,10 @@ void i2c_onRequest(){
   /*Return if esp32 is free to perform new sequence*/
   Serial.println("Data 1");
 
-  Wire.write(sequenceMachine.getCurrentState());
-  Serial.println("Data 1");
+  Wire.write(titanicCrane.cameraScanningState);
   Wire.write(titanicCrane.getCameraServoPanPos());
-  Serial.println("Data 1");
   Wire.write(titanicCrane.getCameraServoTiltPos());
-  Serial.println("Data 1");
   Wire.write(titanicCrane.getCraneThetaPos());
-  Serial.println("Data 1");
   //Wire.write(0x4);
 }
 int readUint16data(){
@@ -46,6 +42,8 @@ void i2c_onReceive(int len){
     
     if(tempByte == END_COMMAND){
       titanicCrane.inverse_kinematics(xref,yref,zref);
+      titanicCrane.cameraScanningState = scaning_towards;
+      titanicCrane.current_state_index_camera = 0;
       sequenceMachine.changeState(arm2target);
       Serial.println("Arm moving to target position");
     } 
@@ -56,6 +54,9 @@ void i2c_onReceive(int len){
   {
     tempByte = Wire.read();
     if(tempByte == END_COMMAND){
+      /*En softly the scanning sequence*/
+      titanicCrane.cameraScanningState =scaning_towards;
+      titanicCrane.current_state_index_camera = 0;
       sequenceMachine.changeState(sailing);
       Serial.println("Saling to avoid colitions");
     } 
